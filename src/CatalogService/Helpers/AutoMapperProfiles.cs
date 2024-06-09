@@ -11,9 +11,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<Product, ProductDto>()
             .ForMember(d => d.Brand, o => o.MapFrom(s => s.Model.Brand.Name))
             .ForMember(d => d.Model, o => o.MapFrom(s => s.Model.Name))
-            .ForMember(d => d.Category, o => o.MapFrom(s => s.Category.Name));
-
-        CreateMap<Specification, SpecificationDto>()
-            .ForMember(d => d.Name, o => o.MapFrom(s => s.SpecificationType.Name));
+            .ForMember(d => d.Category, o => o.MapFrom(s => s.Category.Name))
+            .ForMember(d => d.Specifications, o => o.MapFrom
+                (
+                    s => s.Specifications.Select(p => p.SpecificationType.Name + ": " + p.Value).ToList()
+                ));
     }
 }

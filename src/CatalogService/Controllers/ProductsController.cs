@@ -20,7 +20,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<ProductDto>>> GetAllProducts()
+    public async Task<ActionResult<List<ProductDto>>> GetProducts()
     {
         var products = await _context.Products
             .Include(p => p.Model)
@@ -34,7 +34,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ProductDto>> GetProductById(Guid id)
+    public async Task<ActionResult<ProductDto>> GetProduct(Guid id)
     {
         var product = await _context.Products
             .Include(p => p.Model)
@@ -42,7 +42,7 @@ public class ProductsController : ControllerBase
             .Include(p => p.Category)
             .Include(p => p.Specifications)
             .ThenInclude(s => s.SpecificationType)
-            .FirstOrDefaultAsync(p => p.ProductId == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         return _mapper.Map<ProductDto>(product);
     }

@@ -2,7 +2,7 @@
 
 public class Specification
 {
-    public Guid SpecificationId { get; set; }
+    public Guid Id { get; set; }
     public string Value { get; set; }
     public Guid ProductId { get; set; }
     public Product Product { get; set; }

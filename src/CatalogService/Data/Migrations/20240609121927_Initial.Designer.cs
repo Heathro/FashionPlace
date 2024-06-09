@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CatalogService.Data.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20240606215401_Initial")]
+    [Migration("20240609121927_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -27,21 +27,21 @@ namespace CatalogService.Data.Migrations
 
             modelBuilder.Entity("CatalogService.Entities.Brand", b =>
                 {
-                    b.Property<Guid>("BrandId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("BrandId");
+                    b.HasKey("Id");
 
                     b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Category", b =>
                 {
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -51,14 +51,14 @@ namespace CatalogService.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Model", b =>
                 {
-                    b.Property<Guid>("ModelId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -68,7 +68,7 @@ namespace CatalogService.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("ModelId");
+                    b.HasKey("Id");
 
                     b.HasIndex("BrandId");
 
@@ -77,7 +77,7 @@ namespace CatalogService.Data.Migrations
 
             modelBuilder.Entity("CatalogService.Entities.Product", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -99,7 +99,7 @@ namespace CatalogService.Data.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.HasKey("ProductId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
@@ -111,7 +111,7 @@ namespace CatalogService.Data.Migrations
 
             modelBuilder.Entity("CatalogService.Entities.Specification", b =>
                 {
-                    b.Property<Guid>("SpecificationId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -124,7 +124,7 @@ namespace CatalogService.Data.Migrations
                     b.Property<string>("Value")
                         .HasColumnType("text");
 
-                    b.HasKey("SpecificationId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
@@ -135,14 +135,14 @@ namespace CatalogService.Data.Migrations
 
             modelBuilder.Entity("CatalogService.Entities.SpecificationType", b =>
                 {
-                    b.Property<Guid>("SpecificationTypeId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("SpecificationTypeId");
+                    b.HasKey("Id");
 
                     b.ToTable("SpecificationTypes");
                 });

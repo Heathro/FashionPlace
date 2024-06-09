@@ -1,0 +1,28 @@
+[
+  {
+    "Id": "3659ac24-29dd-407a-81f5-ecfe6f924b9b",
+    "imageUrl": "https://cdn.pixabay.com/photo/2017/08/02/00/28/people-2569043_1280.jpg",
+    "description": "cool rollneck",
+    "price": 5,
+    "quantity": 2,
+    "brand": "Nike",
+    "model": "Skinny",
+    "category": "Rollneck",
+    "specifications": [
+      "Color: Black"
+    ]
+  },
+  {
+    "Id": "afbee524-5972-4075-8800-7d1f9d7b0a0c",
+    "imageUrl": "https://cdn.pixabay.com/photo/2024/05/25/05/34/ai-generated-8786361_1280.jpg",
+    "description": "very nice t-shirt",
+    "price": 10,
+    "quantity": 4,
+    "brand": "Adidas",
+    "model": "Comfy",
+    "category": "T-Shirts",
+    "specifications": [
+      "Color: White"
+    ]
+  }
+]
