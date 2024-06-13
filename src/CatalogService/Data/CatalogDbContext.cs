@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CatalogService.Entities;
+using MassTransit;
 
 namespace CatalogService.Data;
 
@@ -16,6 +17,12 @@ public class CatalogDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.AddInboxStateEntity();
+        modelBuilder.AddOutboxMessageEntity();
+        modelBuilder.AddOutboxStateEntity();
+
         modelBuilder.Entity<Product>()
             .HasOne(p => p.Model)
             .WithOne(m => m.Product)

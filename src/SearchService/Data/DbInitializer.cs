@@ -24,11 +24,11 @@ public class DbInitializer
         var count = await DB.CountAsync<Product>();
         if (count > 0)
         {
-            Console.WriteLine("======>>>>>> No seeding needed. Database already contains data.");
+            Console.WriteLine("\n\n\n======>>>>>> No seeding needed. Database already contains data.\n\n\n");
         }
         else
         {
-            Console.WriteLine("======>>>>>> Seeding data.");
+            Console.WriteLine("\n\n\n======>>>>>> Seeding data.\n\n\n");
 
             var data = await File.ReadAllTextAsync("Data/products.json");
             var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};

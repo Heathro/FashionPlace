@@ -18,11 +18,11 @@ public class DbInitializer
 
         if (context.Products.Any())
         {
-            Console.WriteLine("======>>>>>> No seeding needed. Database already contains data.");
+            Console.WriteLine("\n\n\n======>>>>>> No seeding needed. Database already contains data.\n\n\n");
             return;
         }
 
-        Console.WriteLine("======>>>>>> Seeding data.");
+        Console.WriteLine("\n\n\n======>>>>>> Seeding data.\n\n\n");
 
         var products = new List<Product>()
         {
