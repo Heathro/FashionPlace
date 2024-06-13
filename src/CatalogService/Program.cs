@@ -13,7 +13,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 var app = builder.Build();
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 try

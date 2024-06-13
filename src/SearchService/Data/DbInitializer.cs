@@ -19,7 +19,6 @@ public class DbInitializer
             .Key(p => p.Brand, KeyType.Text)
             .Key(p => p.Model, KeyType.Text)
             .Key(p => p.Category, KeyType.Text)
-            .Key(p => p.Specifications, KeyType.Text)
             .CreateAsync();
 
         var count = await DB.CountAsync<Product>();

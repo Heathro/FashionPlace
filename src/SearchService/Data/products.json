@@ -8,9 +8,9 @@
     "brand": "Nike",
     "model": "Skinny",
     "category": "Rollneck",
-    "specifications": [
-      "Color: Black"
-    ]
+    "specifications": {
+      "Color": "White"
+    }
   },
   {
     "Id": "afbee524-5972-4075-8800-7d1f9d7b0a0c",
@@ -21,8 +21,8 @@
     "brand": "Adidas",
     "model": "Comfy",
     "category": "T-Shirts",
-    "specifications": [
-      "Color: White"
-    ]
+    "specifications": {
+      "Color": "Black"
+    }
   }
 ]

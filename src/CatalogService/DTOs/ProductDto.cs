@@ -10,5 +10,5 @@ public class ProductDto
     public string Brand { get; set; }
     public string Model { get; set; }
     public string Category { get; set; }
-    public ICollection<string> Specifications { get; set; }
+    public IDictionary<string, string> Specifications { get; set; }
 }
