@@ -66,26 +66,6 @@ public class ProductsController : ControllerBase
         return _mapper.Map<ProductDto>(product);
     }
 
-    [HttpGet("categories")]
-    public async Task<ActionResult<List<CategoryDto>>> GetCategories()
-    {
-        var categories = await _context.Categories.ToListAsync();
-        var categoryDtos = BuildCategoryHierarchy(null, categories);
-        return Ok(categoryDtos);
-    }
-
-    private List<CategoryDto> BuildCategoryHierarchy(Guid? parentId, List<Category> categories)
-    {
-        return categories
-            .Where(c => c.ParentCategoryId == parentId)
-            .Select(c => new CategoryDto
-            {
-                Name = c.Name,
-                SubCategories = BuildCategoryHierarchy(c.Id, categories)
-            })
-            .ToList();
-    }
-
     // [HttpPost]
     // public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto)
     // {
@@ -159,4 +139,25 @@ public class ProductsController : ControllerBase
 
     //     return CreatedAtAction(nameof(GetProduct), new { product.Id }, newProduct);
     // }
+
+    [HttpGet("categories")]
+    public async Task<ActionResult<List<CategoryDto>>> GetCategories()
+    {
+        var categories = await _context.Categories.ToListAsync();
+        var categoryDtos = BuildCategoryHierarchy(null, categories);
+        return Ok(categoryDtos);
+    }
+
+    private List<CategoryDto> BuildCategoryHierarchy(Guid? parentId, List<Category> categories)
+    {
+        return categories
+            .Where(c => c.ParentCategoryId == parentId)
+            .Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                SubCategories = BuildCategoryHierarchy(c.Id, categories)
+            })
+            .ToList();
+    }
 }

@@ -11,9 +11,11 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<Product, ProductDto>()
             .ForMember(d => d.Brand, o => o.MapFrom(s => s.Model.Brand.Name))
-            .ForMember(d => d.Model, o => o.MapFrom(s => s.Model.Name))
-            .ForMember(d => d.Categories, o => o.MapFrom(s =>
-                GetCategories(s.ProductCategories.Select(pc => pc.Category).ToList())));
+            .ForMember(d => d.Model, o => o.MapFrom(s => s.Model.Name));
+
+        CreateMap<ProductCategory, ProductCategoryDto>()
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Category.Id))
+            .ForMember(d => d.Categories, o => o.MapFrom(s => GetCategories(s.Category)));
 
         CreateMap<Variant, VariantDto>()
             .ForMember(d => d.Color, o => o.MapFrom(s => s.Color.Name))
@@ -25,25 +27,14 @@ public class AutoMapperProfiles : Profile
         CreateMap<ProductDto, ProductAdded>();
     }
 
-    private List<List<string>> GetCategories(List<Category> categories)
+    private List<string> GetCategories(Category category)
     {
-        var categoriesList = new List<List<string>>();
-
-        foreach (var category in categories)
+        var categoryList = new List<string>();
+        while (category != null)
         {
-            var categoryPointer = category;
-
-            var categoryList = new List<string>();
-
-            while (categoryPointer != null)
-            {
-                categoryList.Add(categoryPointer.Name);
-                categoryPointer = categoryPointer.ParentCategory;
-            }
-            
-            categoriesList.Add(categoryList);
-        }
-        
-        return categoriesList;
+            categoryList.Add(category.Name);
+            category = category.ParentCategory;
+        }        
+        return categoryList;
     }
 }

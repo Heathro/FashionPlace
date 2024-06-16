@@ -6,7 +6,7 @@ public class ProductDto
     public string Description { get; set; }
     public string Brand { get; set; }
     public string Model { get; set; }
-    public ICollection<ICollection<string>> Categories { get; set; }
+    public ICollection<ProductCategoryDto> ProductCategories { get; set; }
     public ICollection<VariantDto> Variants { get; set; }
     public ICollection<SpecificationDto> Specifications { get; set; }
 }

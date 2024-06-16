@@ -38,7 +38,12 @@ public class DbInitializer
                     product.Brand,
                     product.Model
                 };
-                searchStringList.AddRange(product.Categories);
+
+                foreach (var productCategory in product.ProductCategories)
+                {
+                    searchStringList.AddRange(productCategory.Categories);
+                }
+
                 searchStringList.AddRange(product.Variants.Select(v => v.Color));
                 searchStringList.AddRange(product.Variants.Select(v => v.Size));
                 searchStringList.AddRange(product.Specifications.Select(s => s.Value));

@@ -1,71 +1,91 @@
 [
     {
-        "id": "79841d33-99dd-4c3b-8e8f-d8535a99706f",
-        "description": "very comfy",
-        "brand": "Adidas",
-        "model": "Strike",
-        "categories": [
-            "T-shirts",
-            "Clothing",
-            "Mens"
-        ],
-        "variants": [
-            {
-                "id": "07c2439c-1318-494e-b8e5-f2f7554fd33a",
-                "color": "White",
-                "size": "S",
-                "price": 10,
-                "discount": 0,
-                "quantity": 8
-            },
-            {
-                "id": "96e81cc1-2b45-4bf9-b5cd-67e128ffee3f",
-                "color": "Black",
-                "size": "XL",
-                "price": 12,
-                "discount": 10,
-                "quantity": 4
-            }
-        ],
-        "specifications": [
-            {
-                "type": "Length",
-                "value": "Regular"
-            },
-            {
-                "type": "Fabric",
-                "value": "Polyester"
-            }
-        ]
-    },
-    {
-        "id": "c5ba5ea5-a64c-49c5-a74e-e2f2a0880ecd",
+        "id": "adbbe794-89c0-435a-ac14-d972df23f5f6",
         "description": "speedy runners",
         "brand": "Nike",
         "model": "Air",
-        "categories": [
-            "Trainers",
-            "Footwear",
-            "Womens"
+        "productCategories": [
+            {
+                "id": "62af3818-76f9-4f2d-b889-22f30eabdc1a",
+                "categories": [
+                    "Trainers",
+                    "Footwear",
+                    "Womens"
+                ]
+            }
         ],
         "variants": [
             {
-                "id": "e1afba1e-fb22-43b2-b5a3-1661b2b638cc",
+                "id": "0252b5e9-90ae-442f-a416-e60e6196efcc",
                 "color": "Blue",
                 "size": "M",
                 "price": 40,
                 "discount": 30,
-                "quantity": 2
+                "quantity": 2,
+                "imageUrl": "imageUrl nike air blue m"
             }
         ],
         "specifications": [
             {
-                "type": "Sole",
-                "value": "Rubber"
-            },
-            {
                 "type": "Surface",
                 "value": "Road"
+            },
+            {
+                "type": "Sole",
+                "value": "Rubber"
+            }
+        ]
+    },
+    {
+        "id": "e4346ac9-1ad0-41f3-87c8-02be97d12f80",
+        "description": "very comfy",
+        "brand": "Adidas",
+        "model": "Strike",
+        "productCategories": [
+            {
+                "id": "3b07b3a0-36d9-4015-b944-5905d3d2550f",
+                "categories": [
+                    "Football",
+                    "Sport"
+                ]
+            },
+            {
+                "id": "91b78880-b081-460b-9a2a-9e2b12b4764e",
+                "categories": [
+                    "T-shirts",
+                    "Clothing",
+                    "Mens"
+                ]
+            }
+        ],
+        "variants": [
+            {
+                "id": "aa5014de-dfeb-4e85-92e7-64a02722a82d",
+                "color": "White",
+                "size": "S",
+                "price": 10,
+                "discount": 0,
+                "quantity": 8,
+                "imageUrl": "imageUrl adidas strike white s"
+            },
+            {
+                "id": "f627a703-0455-4ff6-9757-1d50d0a76884",
+                "color": "Black",
+                "size": "XL",
+                "price": 12,
+                "discount": 10,
+                "quantity": 4,
+                "imageUrl": "imageUrl adidas strike black xl"
+            }
+        ],
+        "specifications": [
+            {
+                "type": "Fabric",
+                "value": "Polyester"
+            },
+            {
+                "type": "Length",
+                "value": "Regular"
             }
         ]
     }
