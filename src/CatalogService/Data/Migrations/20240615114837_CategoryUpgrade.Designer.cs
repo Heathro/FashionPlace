@@ -3,6 +3,7 @@ using System;
 using CatalogService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CatalogService.Data.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    partial class CatalogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240615114837_CategoryUpgrade")]
+    partial class CategoryUpgrade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,25 @@ namespace CatalogService.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CatalogService.Entities.BottomCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MiddleCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MiddleCategoryId");
+
+                    b.ToTable("BottomCategory");
+                });
 
             modelBuilder.Entity("CatalogService.Entities.Brand", b =>
                 {
@@ -42,15 +64,22 @@ namespace CatalogService.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Property<Guid>("BottomCategoryId")
+                        .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ParentCategoryId")
+                    b.Property<Guid>("MiddleCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TopCategoryId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentCategoryId");
+                    b.HasIndex("BottomCategoryId");
+
+                    b.HasIndex("MiddleCategoryId");
+
+                    b.HasIndex("TopCategoryId");
 
                     b.ToTable("Categories");
                 });
@@ -67,6 +96,25 @@ namespace CatalogService.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Colors");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.MiddleCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TopCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TopCategoryId");
+
+                    b.ToTable("MiddleCategory");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Model", b =>
@@ -120,7 +168,7 @@ namespace CatalogService.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategory");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Size", b =>
@@ -173,6 +221,20 @@ namespace CatalogService.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SpecificationTypes");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.TopCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TopCategory");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Variant", b =>
@@ -383,14 +445,53 @@ namespace CatalogService.Data.Migrations
                     b.ToTable("OutboxState");
                 });
 
+            modelBuilder.Entity("CatalogService.Entities.BottomCategory", b =>
+                {
+                    b.HasOne("CatalogService.Entities.MiddleCategory", "MiddleCaterogy")
+                        .WithMany("BottomCategories")
+                        .HasForeignKey("MiddleCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MiddleCaterogy");
+                });
+
             modelBuilder.Entity("CatalogService.Entities.Category", b =>
                 {
-                    b.HasOne("CatalogService.Entities.Category", "ParentCategory")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("CatalogService.Entities.BottomCategory", "BottomCategory")
+                        .WithMany("Categories")
+                        .HasForeignKey("BottomCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("ParentCategory");
+                    b.HasOne("CatalogService.Entities.MiddleCategory", "MiddleCategory")
+                        .WithMany("Categories")
+                        .HasForeignKey("MiddleCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CatalogService.Entities.TopCategory", "TopCategory")
+                        .WithMany("Categories")
+                        .HasForeignKey("TopCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("BottomCategory");
+
+                    b.Navigation("MiddleCategory");
+
+                    b.Navigation("TopCategory");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.MiddleCategory", b =>
+                {
+                    b.HasOne("CatalogService.Entities.TopCategory", "TopCaterogy")
+                        .WithMany("MiddleCategories")
+                        .HasForeignKey("TopCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TopCaterogy");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Model", b =>
@@ -398,7 +499,7 @@ namespace CatalogService.Data.Migrations
                     b.HasOne("CatalogService.Entities.Brand", "Brand")
                         .WithMany("Models")
                         .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Brand");
@@ -420,13 +521,13 @@ namespace CatalogService.Data.Migrations
                     b.HasOne("CatalogService.Entities.Category", "Category")
                         .WithMany("ProductCategories")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CatalogService.Entities.Product", "Product")
                         .WithMany("ProductCategories")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -458,7 +559,7 @@ namespace CatalogService.Data.Migrations
                     b.HasOne("CatalogService.Entities.Color", "Color")
                         .WithMany("Variants")
                         .HasForeignKey("ColorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("CatalogService.Entities.Product", "Product")
@@ -470,7 +571,7 @@ namespace CatalogService.Data.Migrations
                     b.HasOne("CatalogService.Entities.Size", "Size")
                         .WithMany("Variants")
                         .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Color");
@@ -478,6 +579,11 @@ namespace CatalogService.Data.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Size");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.BottomCategory", b =>
+                {
+                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Brand", b =>
@@ -488,13 +594,18 @@ namespace CatalogService.Data.Migrations
             modelBuilder.Entity("CatalogService.Entities.Category", b =>
                 {
                     b.Navigation("ProductCategories");
-
-                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Color", b =>
                 {
                     b.Navigation("Variants");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.MiddleCategory", b =>
+                {
+                    b.Navigation("BottomCategories");
+
+                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("CatalogService.Entities.Model", b =>
@@ -519,6 +630,13 @@ namespace CatalogService.Data.Migrations
             modelBuilder.Entity("CatalogService.Entities.SpecificationType", b =>
                 {
                     b.Navigation("Specifications");
+                });
+
+            modelBuilder.Entity("CatalogService.Entities.TopCategory", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("MiddleCategories");
                 });
 #pragma warning restore 612, 618
         }

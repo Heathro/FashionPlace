@@ -1,28 +1,72 @@
 [
-  {
-    "Id": "3659ac24-29dd-407a-81f5-ecfe6f924b9b",
-    "imageUrl": "https://cdn.pixabay.com/photo/2017/08/02/00/28/people-2569043_1280.jpg",
-    "description": "cool rollneck",
-    "price": 5,
-    "quantity": 2,
-    "brand": "Nike",
-    "model": "Skinny",
-    "category": "Rollneck",
-    "specifications": {
-      "Color": "White"
+    {
+        "id": "79841d33-99dd-4c3b-8e8f-d8535a99706f",
+        "description": "very comfy",
+        "brand": "Adidas",
+        "model": "Strike",
+        "categories": [
+            "T-shirts",
+            "Clothing",
+            "Mens"
+        ],
+        "variants": [
+            {
+                "id": "07c2439c-1318-494e-b8e5-f2f7554fd33a",
+                "color": "White",
+                "size": "S",
+                "price": 10,
+                "discount": 0,
+                "quantity": 8
+            },
+            {
+                "id": "96e81cc1-2b45-4bf9-b5cd-67e128ffee3f",
+                "color": "Black",
+                "size": "XL",
+                "price": 12,
+                "discount": 10,
+                "quantity": 4
+            }
+        ],
+        "specifications": [
+            {
+                "type": "Length",
+                "value": "Regular"
+            },
+            {
+                "type": "Fabric",
+                "value": "Polyester"
+            }
+        ]
+    },
+    {
+        "id": "c5ba5ea5-a64c-49c5-a74e-e2f2a0880ecd",
+        "description": "speedy runners",
+        "brand": "Nike",
+        "model": "Air",
+        "categories": [
+            "Trainers",
+            "Footwear",
+            "Womens"
+        ],
+        "variants": [
+            {
+                "id": "e1afba1e-fb22-43b2-b5a3-1661b2b638cc",
+                "color": "Blue",
+                "size": "M",
+                "price": 40,
+                "discount": 30,
+                "quantity": 2
+            }
+        ],
+        "specifications": [
+            {
+                "type": "Sole",
+                "value": "Rubber"
+            },
+            {
+                "type": "Surface",
+                "value": "Road"
+            }
+        ]
     }
-  },
-  {
-    "Id": "afbee524-5972-4075-8800-7d1f9d7b0a0c",
-    "imageUrl": "https://cdn.pixabay.com/photo/2024/05/25/05/34/ai-generated-8786361_1280.jpg",
-    "description": "very nice t-shirt",
-    "price": 10,
-    "quantity": 4,
-    "brand": "Adidas",
-    "model": "Comfy",
-    "category": "T-Shirts",
-    "specifications": {
-      "Color": "Black"
-    }
-  }
 ]

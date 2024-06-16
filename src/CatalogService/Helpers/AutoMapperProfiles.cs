@@ -12,26 +12,38 @@ public class AutoMapperProfiles : Profile
         CreateMap<Product, ProductDto>()
             .ForMember(d => d.Brand, o => o.MapFrom(s => s.Model.Brand.Name))
             .ForMember(d => d.Model, o => o.MapFrom(s => s.Model.Name))
-            .ForMember(d => d.Category, o => o.MapFrom(s => s.Category.Name))
-            .ForMember(d => d.Specifications, o => o.MapFrom(s => s.Specifications
-                .ToDictionary(sp => sp.SpecificationType.Name, sp => sp.Value)
-            ));
+            .ForMember(d => d.Categories, o => o.MapFrom(s =>
+                GetCategories(s.ProductCategories.Select(pc => pc.Category).ToList())));
 
-        CreateMap<CreateProductDto, Product>()
-            .ForMember(d => d.Model, o => o.MapFrom(s => 
-                new Model{ Name = s.Model, Brand = new Brand { Name = s.Brand } }
-            ))
-            .ForMember(d => d.Category, o => o.MapFrom(s =>
-                new Category { Name = s.Category }
-            ))
-            .ForMember(d => d.Specifications, o => o.MapFrom(s =>
-                s.Specifications.Select(p => new Specification
-                {
-                    Value = p.Value,
-                    SpecificationType = new SpecificationType { Name = p.Key }
-                })
-            ));
+        CreateMap<Variant, VariantDto>()
+            .ForMember(d => d.Color, o => o.MapFrom(s => s.Color.Name))
+            .ForMember(d => d.Size, o => o.MapFrom(s => s.Size.Name));
+
+        CreateMap<Specification, SpecificationDto>()
+            .ForMember(d => d.Type, o => o.MapFrom(s => s.SpecificationType.Type));
 
         CreateMap<ProductDto, ProductAdded>();
+    }
+
+    private List<List<string>> GetCategories(List<Category> categories)
+    {
+        var categoriesList = new List<List<string>>();
+
+        foreach (var category in categories)
+        {
+            var categoryPointer = category;
+
+            var categoryList = new List<string>();
+
+            while (categoryPointer != null)
+            {
+                categoryList.Add(categoryPointer.Name);
+                categoryPointer = categoryPointer.ParentCategory;
+            }
+            
+            categoriesList.Add(categoryList);
+        }
+        
+        return categoriesList;
     }
 }
