@@ -32,7 +32,7 @@ public class AutoMapperProfiles : Profile
         var categoryList = new List<string>();
         while (category != null)
         {
-            categoryList.Add(category.Name);
+            categoryList.Insert(0, category.Name);
             category = category.ParentCategory;
         }        
         return categoryList;

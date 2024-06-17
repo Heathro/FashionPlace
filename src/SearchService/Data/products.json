@@ -1,66 +1,29 @@
 [
     {
-        "id": "adbbe794-89c0-435a-ac14-d972df23f5f6",
-        "description": "speedy runners",
-        "brand": "Nike",
-        "model": "Air",
-        "productCategories": [
-            {
-                "id": "62af3818-76f9-4f2d-b889-22f30eabdc1a",
-                "categories": [
-                    "Trainers",
-                    "Footwear",
-                    "Womens"
-                ]
-            }
-        ],
-        "variants": [
-            {
-                "id": "0252b5e9-90ae-442f-a416-e60e6196efcc",
-                "color": "Blue",
-                "size": "M",
-                "price": 40,
-                "discount": 30,
-                "quantity": 2,
-                "imageUrl": "imageUrl nike air blue m"
-            }
-        ],
-        "specifications": [
-            {
-                "type": "Surface",
-                "value": "Road"
-            },
-            {
-                "type": "Sole",
-                "value": "Rubber"
-            }
-        ]
-    },
-    {
-        "id": "e4346ac9-1ad0-41f3-87c8-02be97d12f80",
+        "id": "e4ebd627-b528-47ea-9b7b-c6f348636f2e",
         "description": "very comfy",
         "brand": "Adidas",
         "model": "Strike",
         "productCategories": [
             {
-                "id": "3b07b3a0-36d9-4015-b944-5905d3d2550f",
+                "id": "5d03c3b6-2aed-45b5-8100-cd025cff652a",
                 "categories": [
-                    "Football",
-                    "Sport"
+                    "Sport",
+                    "Football"
                 ]
             },
             {
-                "id": "91b78880-b081-460b-9a2a-9e2b12b4764e",
+                "id": "bdff1c38-ad9a-4475-944a-b8609b5150ef",
                 "categories": [
-                    "T-shirts",
+                    "Mens",
                     "Clothing",
-                    "Mens"
+                    "T-shirts"
                 ]
             }
         ],
         "variants": [
             {
-                "id": "aa5014de-dfeb-4e85-92e7-64a02722a82d",
+                "id": "a0a810f5-21ac-4cbb-aa69-1866d0451809",
                 "color": "White",
                 "size": "S",
                 "price": 10,
@@ -69,7 +32,7 @@
                 "imageUrl": "imageUrl adidas strike white s"
             },
             {
-                "id": "f627a703-0455-4ff6-9757-1d50d0a76884",
+                "id": "b963e322-9302-4d60-a694-c0e5ff9c86e9",
                 "color": "Black",
                 "size": "XL",
                 "price": 12,
@@ -86,6 +49,43 @@
             {
                 "type": "Length",
                 "value": "Regular"
+            }
+        ]
+    },
+    {
+        "id": "fdcddd13-5c9a-42bc-af48-9dd8352aa0e8",
+        "description": "speedy runners",
+        "brand": "Nike",
+        "model": "Air",
+        "productCategories": [
+            {
+                "id": "6a2f8e7f-9dd4-4da6-a3e6-c999ce461f02",
+                "categories": [
+                    "Womens",
+                    "Footwear",
+                    "Trainers"
+                ]
+            }
+        ],
+        "variants": [
+            {
+                "id": "a9fc858e-3447-4210-a9fa-885b1cb9ba5c",
+                "color": "Blue",
+                "size": "M",
+                "price": 40,
+                "discount": 30,
+                "quantity": 2,
+                "imageUrl": "imageUrl nike air blue m"
+            }
+        ],
+        "specifications": [
+            {
+                "type": "Surface",
+                "value": "Road"
+            },
+            {
+                "type": "Sole",
+                "value": "Rubber"
             }
         ]
     }

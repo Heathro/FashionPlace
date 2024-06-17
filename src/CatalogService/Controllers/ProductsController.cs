@@ -34,6 +34,8 @@ public class ProductsController : ControllerBase
                 .ThenInclude(pc => pc.Category)
                     .ThenInclude(c => c.ParentCategory)
                         .ThenInclude(c => c.ParentCategory)
+                            .ThenInclude(c => c.ParentCategory)
+                                .ThenInclude(c => c.ParentCategory)
             .Include(p => p.Variants)
                 .ThenInclude(v => v.Color)
             .Include(p => p.Variants)
@@ -55,6 +57,8 @@ public class ProductsController : ControllerBase
                 .ThenInclude(pc => pc.Category)
                     .ThenInclude(c => c.ParentCategory)
                         .ThenInclude(c => c.ParentCategory)
+                            .ThenInclude(c => c.ParentCategory)
+                                .ThenInclude(c => c.ParentCategory)
             .Include(p => p.Variants)
                 .ThenInclude(v => v.Color)
             .Include(p => p.Variants)
@@ -66,79 +70,99 @@ public class ProductsController : ControllerBase
         return _mapper.Map<ProductDto>(product);
     }
 
-    // [HttpPost]
-    // public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto)
-    // {
-    //     Brand brand;
-    //     if (createProductDto.Model.BrandId == Guid.Empty)
-    //     {
-    //         brand = new Brand { Name = createProductDto.Model.BrandName };
-    //         _context.Brands.Add(brand);
-    //         await _context.SaveChangesAsync();
-    //     }
-    //     else
-    //     {
-    //         brand = await _context.Brands.FirstOrDefaultAsync(b => b.Id == createProductDto.Model.BrandId);
-    //     }
+    private List<string> GetCategories(Category category)
+    {
+        var categoryList = new List<string>();
+        while (category != null)
+        {
+            categoryList.Add(category.Name);
+            category = category.ParentCategory;
+        }
+        return categoryList;
+    }
 
-    //     // GetExistingOrCreateNewBrand(createProductDto.Model.BrandName);
+    [HttpPost]
+    public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto)
+    {
+        var brand = await _context.Brands.FirstOrDefaultAsync(b => b.Name == createProductDto.Brand);
+        var model = new Model
+        {
+            Name = createProductDto.Model,
+            Brand = brand ?? new Brand { Name = createProductDto.Brand }
+        };
 
-    //     var product = new Product()
-    //     {
-    //         Description = createProductDto.Description,
-    //         Model = new Model
-    //         {
-    //             Name = createProductDto.Model.Name,
-    //             Brand = brand
-    //         },
-    //         Variants = new List<Variant>
-    //             {
-    //                 new Variant
-    //                 {
-    //                     Color = new Color { Name = "White" },
-    //                     Size = new Size { Name = "S" },
-    //                     Price = 10,
-    //                     Discount = 0,
-    //                     Quantity = 8,
-    //                     ImageUrl = "imageUrl adidas strike white s"
-    //                 },
-    //                 new Variant
-    //                 {
-    //                     Color = new Color { Name = "Black" },
-    //                     Size = new Size { Name = "XL" },
-    //                     Price = 12,
-    //                     Discount = 10,
-    //                     Quantity = 4,
-    //                     ImageUrl = "imageUrl adidas strike black xl"
-    //                 }
-    //             },
-    //         Specifications = new List<Specification>
-    //             {
-    //                 new Specification
-    //                 {
-    //                     SpecificationType = new SpecificationType{ Type = "Fabric" },
-    //                     Value = "Polyester"
-    //                 },
-    //                 new Specification
-    //                 {
-    //                     SpecificationType = new SpecificationType{ Type = "Length" },
-    //                     Value = "Regular"
-    //                 }
-    //             }
-    //     };
+        var productCategories = new List<ProductCategory>();
+        foreach (var category in createProductDto.Categories)
+        {
+            Category parent = null;
+            if (category.ParentCategoryId != null)
+            {
+                parent = await _context.Categories
+                    .Include(c => c.ParentCategory)
+                        .ThenInclude(c => c.ParentCategory)
+                            .ThenInclude(c => c.ParentCategory)
+                                .ThenInclude(c => c.ParentCategory)
+                    .FirstOrDefaultAsync(c => c.Id == category.ParentCategoryId);
+            }
 
-    //     _context.Products.Add(product);
+            Category current = null;
+            foreach (var newCategory in category.NewCategories)
+            {
+                current = new Category { Name = newCategory, ParentCategory = parent };
+                parent = current;
+            }
 
-    //     var newProduct = _mapper.Map<ProductDto>(product);
+            productCategories.Add(new ProductCategory { Category = current ?? parent });
+        }
 
-    //     //var productAdded = _mapper.Map<ProductAdded>(newProduct);
-    //     //await _publishEndpoint.Publish(productAdded);
+        var variants = new List<Variant>();
+        foreach (var variant in createProductDto.Variants)
+        {
+            var color = await _context.Colors.FirstOrDefaultAsync(c => c.Name == variant.Color);
+            var size = await _context.Sizes.FirstOrDefaultAsync(s => s.Name == variant.Size);
+            variants.Add(new Variant
+            {
+                Color = color ?? new Color { Name = variant.Color },
+                Size = size ?? new Size { Name = variant.Size },
+                Price = variant.Price,
+                Discount = variant.Discount,
+                Quantity = variant.Quantity,
+                ImageUrl = variant.ImageUrl
+            });
+        }
 
-    //     var result = await _context.SaveChangesAsync() > 0;
-    //     if (!result) return BadRequest("Failed to create product");
+        var specifications = new List<Specification>();
+        foreach (var specification in createProductDto.Specifications)
+        {
+            var type = await _context.SpecificationTypes.FirstOrDefaultAsync(s => s.Type == specification.Type);
+            specifications.Add(new Specification
+            {
+                SpecificationType = type ?? new SpecificationType { Type = specification.Type },
+                Value = specification.Value
+            });
+        }
 
-    //     return CreatedAtAction(nameof(GetProduct), new { product.Id }, newProduct);
-    // }
+        var product = new Product()
+        {
+            Description = createProductDto.Description,
+            Model = model,
+            ProductCategories = productCategories,
+            Variants = variants,
+            Specifications = specifications
+        };
+
+        _context.Products.Add(product);
+
+        var newProduct = _mapper.Map<ProductDto>(product);
+
+        var productAdded = _mapper.Map<ProductAdded>(newProduct);
+        await _publishEndpoint.Publish(productAdded);
+
+        var result = await _context.SaveChangesAsync() > 0;
+        if (!result) return BadRequest("Failed to create product");
+
+        return CreatedAtAction(nameof(GetProduct), new { product.Id }, newProduct);
+    }
 
     [HttpGet("categories")]
     public async Task<ActionResult<List<CategoryDto>>> GetCategories()

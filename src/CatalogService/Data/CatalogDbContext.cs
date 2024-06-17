@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using CatalogService.Entities;
 using MassTransit;
+using CatalogService.Entities;
 
 namespace CatalogService.Data;
 
