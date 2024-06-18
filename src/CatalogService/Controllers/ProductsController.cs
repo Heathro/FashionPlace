@@ -70,17 +70,6 @@ public class ProductsController : ControllerBase
         return _mapper.Map<ProductDto>(product);
     }
 
-    private List<string> GetCategories(Category category)
-    {
-        var categoryList = new List<string>();
-        while (category != null)
-        {
-            categoryList.Add(category.Name);
-            category = category.ParentCategory;
-        }
-        return categoryList;
-    }
-
     [HttpPost]
     public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto)
     {
