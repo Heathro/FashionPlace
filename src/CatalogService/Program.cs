@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MassTransit;
 using CatalogService.Data;
 
@@ -23,9 +24,18 @@ builder.Services.AddMassTransit(x =>
         config.ConfigureEndpoints(context);
     });
 });
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["IdentityServiceUrl"];
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters.ValidateAudience = false;
+        options.TokenValidationParameters.NameClaimType = "username";
+    });
+    
 var app = builder.Build();
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

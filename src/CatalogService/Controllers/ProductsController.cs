@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using MassTransit;
 using AutoMapper;
 using Contracts;
@@ -10,7 +11,7 @@ using CatalogService.Entities;
 namespace CatalogService.Controllers;
 
 [ApiController]
-[Route("api/catalog")]
+[Route("api/catalog/products")]
 public class ProductsController : ControllerBase
 {
     private readonly CatalogDbContext _context;
@@ -24,7 +25,7 @@ public class ProductsController : ControllerBase
         _publishEndpoint = publishEndpoint;
     }
 
-    [HttpGet("products")]
+    [HttpGet]
     public async Task<ActionResult<List<ProductDto>>> GetProducts()
     {
         var products = await _context.Products
@@ -47,7 +48,7 @@ public class ProductsController : ControllerBase
         return _mapper.Map<List<ProductDto>>(products);
     }
 
-    [HttpGet("product/{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetProduct(Guid id)
     {
         var product = await _context.Products
@@ -70,6 +71,7 @@ public class ProductsController : ControllerBase
         return _mapper.Map<ProductDto>(product);
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto)
     {
@@ -151,26 +153,5 @@ public class ProductsController : ControllerBase
         if (!result) return BadRequest("Failed to create product");
 
         return CreatedAtAction(nameof(GetProduct), new { product.Id }, newProduct);
-    }
-
-    [HttpGet("categories")]
-    public async Task<ActionResult<List<CategoryDto>>> GetCategories()
-    {
-        var categories = await _context.Categories.ToListAsync();
-        var categoryDtos = BuildCategoryHierarchy(null, categories);
-        return Ok(categoryDtos);
-    }
-
-    private List<CategoryDto> BuildCategoryHierarchy(Guid? parentId, List<Category> categories)
-    {
-        return categories
-            .Where(c => c.ParentCategoryId == parentId)
-            .Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name,
-                SubCategories = BuildCategoryHierarchy(c.Id, categories)
-            })
-            .ToList();
     }
 }
