@@ -12,6 +12,11 @@ builder.Services.AddMassTransit(configure =>
     configure.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
     configure.UsingRabbitMq((context, config) =>
     {
+        config.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+        {
+            host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+            host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+        });
         config.ReceiveEndpoint("search-product-added", endpoint =>
         {
             endpoint.UseMessageRetry(retry => retry.Interval(5, 5));
