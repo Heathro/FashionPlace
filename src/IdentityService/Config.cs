@@ -28,9 +28,9 @@ public static class Config
             },
             new Client
             {
-                ClientId = "customerWeb",
-                ClientName = "CustomerWeb",
-                ClientSecrets = { new Secret("secret-customerWeb".Sha256()) },
+                ClientId = "customer-web",
+                ClientName = "Customer-Web",
+                ClientSecrets = { new Secret("secret-customer-web".Sha256()) },
                 AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                 RequirePkce = false,
                 RedirectUris = { "http://localhost:3000/api/auth/callback/id-server" },
@@ -40,9 +40,9 @@ public static class Config
             },
             new Client
             {
-                ClientId = "businessDesktop",
-                ClientName = "BusinessDesktop",
-                ClientSecrets = { new Secret("secret-businessDesktop".Sha256()) },
+                ClientId = "business-desktop",
+                ClientName = "Business-Desktop",
+                ClientSecrets = { new Secret("secret-business-desktop".Sha256()) },
                 AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
                 RequirePkce = false,
                 RedirectUris = { "myapp://auth/callback" },

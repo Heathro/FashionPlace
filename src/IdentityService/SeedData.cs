@@ -26,16 +26,34 @@ public class SeedData
             Email = "admin@email.com",
             EmailConfirmed = true,
         };
-        var result = userMgr.CreateAsync(admin, "Pass123$").Result;
-        if (!result.Succeeded)
+        var adminResult = userMgr.CreateAsync(admin, "Pass123$").Result;
+        if (!adminResult.Succeeded)
         {
-            throw new Exception(result.Errors.First().Description);
+            throw new Exception(adminResult.Errors.First().Description);
         }
-        result = userMgr.AddClaimsAsync(admin, [new Claim(JwtClaimTypes.Name, "Admin")]).Result;
-        if (!result.Succeeded)
+        adminResult = userMgr.AddClaimsAsync(admin, [new Claim(JwtClaimTypes.Name, "Admin")]).Result;
+        if (!adminResult.Succeeded)
         {
-            throw new Exception(result.Errors.First().Description);
+            throw new Exception(adminResult.Errors.First().Description);
         }
         Log.Debug("admin created");
+
+        var user = new ApplicationUser
+        {
+            UserName = "user",
+            Email = "user@email.com",
+            EmailConfirmed = true,
+        };
+        var userResult = userMgr.CreateAsync(user, "Pass123$").Result;
+        if (!userResult.Succeeded)
+        {
+            throw new Exception(userResult.Errors.First().Description);
+        }
+        userResult = userMgr.AddClaimsAsync(user, [new Claim(JwtClaimTypes.Name, "User")]).Result;
+        if (!userResult.Succeeded)
+        {
+            throw new Exception(userResult.Errors.First().Description);
+        }
+        Log.Debug("user created");
     }
 }

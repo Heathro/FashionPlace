@@ -9,13 +9,11 @@ public class DbInitializer
     {
         using var scope = app.Services.CreateScope();
 
-        SeedData(scope.ServiceProvider.GetService<CatalogDbContext>());
+        scope.ServiceProvider.GetService<CatalogDbContext>().Database.Migrate();
     }
 
     private static void SeedData(CatalogDbContext context)
     {
-        context.Database.Migrate();
-
         if (context.Products.Any())
         {
             Console.WriteLine("\n\n\n======>>>>>> No seeding needed. Database already contains data.\n\n\n");
@@ -73,16 +71,34 @@ public class DbInitializer
                         Price = 10,
                         Discount = 0,
                         Quantity = 8,
-                        ImageUrl = "imageUrl adidas strike white s"
+                        ImageUrl = "https://images.pexels.com/photos/1304647/pexels-photo-1304647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    },
+                    new Variant
+                    {
+                        Color = new Color { Name = "White" },
+                        Size = new Size { Name = "M" },
+                        Price = 10,
+                        Discount = 0,
+                        Quantity = 4,
+                        ImageUrl = "https://images.pexels.com/photos/1304647/pexels-photo-1304647.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                     },
                     new Variant
                     {
                         Color = new Color { Name = "Black" },
-                        Size = new Size { Name = "XL" },
+                        Size = new Size { Name = "S" },
                         Price = 12,
                         Discount = 10,
-                        Quantity = 4,
-                        ImageUrl = "imageUrl adidas strike black xl"
+                        Quantity = 3,
+                        ImageUrl = "https://images.pexels.com/photos/3399995/pexels-photo-3399995.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    },                    
+                    new Variant
+                    {
+                        Color = new Color { Name = "Black" },
+                        Size = new Size { Name = "L" },
+                        Price = 12,
+                        Discount = 10,
+                        Quantity = 7,
+                        ImageUrl = "https://images.pexels.com/photos/3399995/pexels-photo-3399995.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                     }
                 },
                 Specifications = new List<Specification>
@@ -130,12 +146,21 @@ public class DbInitializer
                 {
                     new Variant
                     {
-                        Color = new Color { Name = "Blue" },
-                        Size = new Size { Name = "M" },
+                        Color = new Color { Name = "Gold" },
+                        Size = new Size { Name = "8 UK" },
                         Price = 40,
                         Discount = 30,
                         Quantity = 2,
-                        ImageUrl = "imageUrl nike air blue m"
+                        ImageUrl = "https://images.pexels.com/photos/1537671/pexels-photo-1537671.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                    },
+                    new Variant
+                    {
+                        Color = new Color { Name = "Gold" },
+                        Size = new Size { Name = "7 UK" },
+                        Price = 40,
+                        Discount = 30,
+                        Quantity = 5,
+                        ImageUrl = "https://images.pexels.com/photos/1537671/pexels-photo-1537671.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                     }
                 },
                 Specifications = new List<Specification>
