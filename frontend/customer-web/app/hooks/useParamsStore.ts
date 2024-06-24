@@ -6,6 +6,7 @@ type State = {
   pageNumber: number
   pageSize: number
   orderBy: string
+  filterBy: string
   pageCount: number
   searchValue: string
 }
@@ -21,6 +22,7 @@ const initialState: State = {
   pageNumber: 1,
   pageSize: 12,
   orderBy: '',
+  filterBy: '',
   pageCount: 1,
   searchValue: ''
 }

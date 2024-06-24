@@ -16,7 +16,8 @@ export default function ProductListings() {
     searchTerm: state.searchTerm,
     pageNumber: state.pageNumber,
     pageSize: state.pageSize,
-    orderBy: state.orderBy
+    orderBy: state.orderBy,
+    filterBy: state.filterBy
   }), shallow)
   const setParams = useParamsStore(state => state.setParams)
   const formattedQuery = queryString.stringifyUrl({url: '', query: params})

@@ -33,10 +33,8 @@ public class SearchController : ControllerBase
             _ => query.Sort(p => p.Ascending(p => p.DiscountedPriceLowest.Value))
         };
 
-        query = searchParams.FilterBy switch
-        {
-            _ => query.Match(x => x.ID != null)
-        };
+        if (!string.IsNullOrEmpty(searchParams.FilterBy))
+        query = query.Match(p => p.Variants.Any(v => v.Color == searchParams.FilterBy));
 
         var result = await query.ExecuteAsync();
 

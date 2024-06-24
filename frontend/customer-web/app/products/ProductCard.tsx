@@ -9,27 +9,22 @@ type Props = {
 }
 
 export default function ProductCard({ product, orderBy }: Props) {
-  let variant: Variant | undefined;
-  let discountedPrice: number | undefined;
+
+  let variant = product.variants.find(v => v.id === product.discountedPriceLowest.id)
+  let discountedPrice = product.discountedPriceLowest.value
   switch (orderBy) {
     case 'discount-amount':
-      variant = product.variants.find(v => v.id === product.discountAmountHighest.id);
-      discountedPrice = product.discountAmountHighest.value;
+      variant = product.variants.find(v => v.id === product.discountAmountHighest.id)
       break;
     case 'discount-procent':
-      variant = product.variants.find(v => v.id === product.discountPercentHighest.id);
-      discountedPrice = product.discountPercentHighest.value;
+      variant = product.variants.find(v => v.id === product.discountPercentHighest.id)
       break;
     case 'price-desc':
-      variant = product.variants.find(v => v.id === product.discountedPriceHighest.id);
+      variant = product.variants.find(v => v.id === product.discountedPriceHighest.id)
       discountedPrice = product.discountedPriceHighest.value;
       break;
-    default:
-      variant = product.variants.find(v => v.id === product.discountedPriceLowest.id);
-      discountedPrice = product.discountedPriceLowest.value;
-      break;
   }
-  if (!variant || !discountedPrice) return;
+  if (!variant) return
 
   const sizes = Array.from(new Set(product.variants.map((variant: Variant) => variant.size)));
 
