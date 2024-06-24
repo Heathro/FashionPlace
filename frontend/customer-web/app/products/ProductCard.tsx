@@ -1,51 +1,54 @@
 import React from 'react'
-import ProductImage from './ProductImage'
+import formatPrice from '../helpers/formatters';
 import { Product, Variant } from '@/types';
+import ProductImage from './ProductImage'
 
 type Props = {
   product: Product
+  orderBy: string
 }
 
-export default function ProductCard({ product }: Props) {
-  const variant = product.variants.find(v => v.quantity > 0);
-  if (!variant) return null;
+export default function ProductCard({ product, orderBy }: Props) {
+  let variant: Variant | undefined;
+  let discountedPrice: number | undefined;
+  switch (orderBy) {
+    case 'discount-amount':
+      variant = product.variants.find(v => v.id === product.discountAmountHighest.id);
+      discountedPrice = product.discountAmountHighest.value;
+      break;
+    case 'discount-procent':
+      variant = product.variants.find(v => v.id === product.discountPercentHighest.id);
+      discountedPrice = product.discountPercentHighest.value;
+      break;
+    case 'price-desc':
+      variant = product.variants.find(v => v.id === product.discountedPriceHighest.id);
+      discountedPrice = product.discountedPriceHighest.value;
+      break;
+    default:
+      variant = product.variants.find(v => v.id === product.discountedPriceLowest.id);
+      discountedPrice = product.discountedPriceLowest.value;
+      break;
+  }
+  if (!variant || !discountedPrice) return;
 
   const sizes = Array.from(new Set(product.variants.map((variant: Variant) => variant.size)));
-
-  const originalPrice = variant.price
-  const discount = variant.discount
-  const discountedPrice = originalPrice * (1 - discount / 100)
-  const formattedOriginalPrice = originalPrice.toLocaleString('en-GB', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-  const formattedDiscountedPrice = discountedPrice.toLocaleString('en-GB', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
 
   return (
     <a href='#' className='group'>
       <ProductImage imageUrl={variant.imageUrl} />
       <div>
-
-        <p className='text-sm text-gray-600 mt-2'>{product.brand}</p>
-
-        <p className='text-2xl'>{product.model}</p>
-
-        <p className='text-sm text-gray-600 mt-2'>
-          {sizes.join(', ')}
-        </p>
-
-        {discount > 0 ? (
-          <div className='flex gap-3'>
-            <p className='text-2xl text-red-500'>£{formattedDiscountedPrice}</p>
-            <p className='text-2xl line-through'>£{formattedOriginalPrice}</p>
+        <p className='text-sm sm:text-base md:text-sm text-gray-600 mt-1 sm:mt-2'>{product.brand}</p>
+        <p className='text-lg sm:text-xl md:text-2xl mt-1 sm:mt-2'>{product.model}</p>
+        <p className='text-sm sm:text-base md:text-sm text-gray-600 mt-1 sm:mt-2'>{sizes.join(', ')}</p>
+      
+        {variant.discount > 0 ? (
+          <div className='flex gap-2 sm:gap-3 mt-1 sm:mt-2'>
+            <p className='text-lg sm:text-xl md:text-2xl text-red-500'>£{formatPrice(discountedPrice)}</p>
+            <p className='text-lg sm:text-xl md:text-2xl line-through'>£{formatPrice(variant.price)}</p>
           </div>
         ) : (
-          <p className='text-2xl'>£{formattedOriginalPrice}</p>
+          <p className='text-lg sm:text-xl md:text-2xl mt-1 sm:mt-2'>£{formatPrice(variant.price)}</p>
         )}
-
       </div>
     </a>
   )

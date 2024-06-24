@@ -1,5 +1,5 @@
 import './globals.css';
-import Navbar from './nav/Navbar';
+import NavBar from './nav/NavBar';
 
 export const metadata = {
   title: 'Fashion Place',
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <Navbar />
+        <NavBar />
         <main className='container mx-auto px-5 pt-10'>
           {children}
         </main>

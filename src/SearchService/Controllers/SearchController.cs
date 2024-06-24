@@ -10,7 +10,7 @@ namespace SearchService.Controllers;
 public class SearchController : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<Product>>> SearchProducts([FromQuery] SearchParams searchParams)
+    public async Task<ActionResult<List<Product>>> SearchProducts([FromQuery]SearchParams searchParams)
     {
         var query = DB.PagedSearch<Product, Product>();
 
@@ -24,7 +24,13 @@ public class SearchController : ControllerBase
 
         query = searchParams.OrderBy switch
         {
-            _ => query.Sort(x => x.Ascending(x => x.Brand))
+            "discount-amount" => query.Sort(p => p.Descending(p => p.DiscountAmountHighest.Value)),
+            "discount-price" => query.Sort(p => p.Descending(p => p.DiscountPercentHighest.Value)),
+            "price-asc" => query.Sort(p => p.Ascending(p => p.DiscountedPriceLowest.Value)),
+            "price-desc" => query.Sort(p => p.Descending(p => p.DiscountedPriceHighest.Value)),
+            "brand-asc" => query.Sort(p => p.Ascending(p => p.Brand)),
+            "brand-desc" => query.Sort(p => p.Descending(p => p.Brand)),
+            _ => query.Sort(p => p.Ascending(p => p.DiscountedPriceLowest.Value))
         };
 
         query = searchParams.FilterBy switch

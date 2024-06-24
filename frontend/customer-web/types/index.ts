@@ -12,6 +12,10 @@ export type Product = {
   productCategories: ProductCategory[]
   variants: Variant[]
   specifications: Specification[]
+  discountAmountHighest: DiscountData
+  discountPercentHighest: DiscountData
+  discountedPriceLowest: DiscountData
+  discountedPriceHighest: DiscountData
   searchString: string
 }
 
@@ -33,6 +37,11 @@ export type Variant = {
 export type Specification = {
   type: string
   value: string
+}
+
+export type DiscountData = {
+  id: string
+  value: number
 }
 
 export type Categories = {
