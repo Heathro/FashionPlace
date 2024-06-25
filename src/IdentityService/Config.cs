@@ -36,7 +36,8 @@ public static class Config
                 RedirectUris = { "http://localhost:3000/api/auth/callback/id-server" },
                 AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "fashionPlace" },
-                AccessTokenLifetime = 3600 * 24 * 30
+                AccessTokenLifetime = 3600 * 24 * 30,
+                AlwaysIncludeUserClaimsInIdToken = true
             },
             new Client
             {
@@ -50,6 +51,7 @@ public static class Config
                 AllowOfflineAccess = true,
                 AllowedScopes = { "openid", "profile", "fashionPlace" },
                 AccessTokenLifetime = 3600 * 24 * 30,
+                AlwaysIncludeUserClaimsInIdToken = true
             }
         ];
 }

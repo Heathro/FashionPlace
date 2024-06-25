@@ -16,7 +16,7 @@ export default function ProductCard({ product, orderBy }: Props) {
     case 'discount-amount':
       variant = product.variants.find(v => v.id === product.discountAmountHighest.id)
       break;
-    case 'discount-procent':
+    case 'discount-percent':
       variant = product.variants.find(v => v.id === product.discountPercentHighest.id)
       break;
     case 'price-desc':

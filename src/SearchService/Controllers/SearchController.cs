@@ -25,7 +25,7 @@ public class SearchController : ControllerBase
         query = searchParams.OrderBy switch
         {
             "discount-amount" => query.Sort(p => p.Descending(p => p.DiscountAmountHighest.Value)),
-            "discount-price" => query.Sort(p => p.Descending(p => p.DiscountPercentHighest.Value)),
+            "discount-percent" => query.Sort(p => p.Descending(p => p.DiscountPercentHighest.Value)),
             "price-asc" => query.Sort(p => p.Ascending(p => p.DiscountedPriceLowest.Value)),
             "price-desc" => query.Sort(p => p.Descending(p => p.DiscountedPriceHighest.Value)),
             "brand-asc" => query.Sort(p => p.Ascending(p => p.Brand)),

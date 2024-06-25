@@ -28,6 +28,7 @@ export default function ProductListings() {
 
   useEffect(() => {
     getData(formattedQuery).then(data => {
+      console.log(data)
       setData(data)
     })
   }, [formattedQuery])

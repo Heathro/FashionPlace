@@ -5,7 +5,7 @@ import { useParamsStore } from '../hooks/useParamsStore'
 
 const orderOptions = [
   { label: 'Discount £ (High to Low)', value: 'discount-amount' },
-  { label: 'Discount % (High To Low)', value: 'discount-procent' },
+  { label: 'Discount % (High To Low)', value: 'discount-percent' },
   { label: 'Price (Low To High)', value: 'price-asc' },
   { label: 'Price (High To Low)', value: 'price-desc' },
   { label: 'Brand (A To Z)', value: 'brand-asc' },
