@@ -2,7 +2,7 @@ import React from 'react'
 import { getSession, getTokenWorkaround } from '../actions/authActions'
 import AuthTest from './AuthTest'
 
-export default async function Session() {
+export default async function Dev() {
   const session = await getSession()
   const token = await getTokenWorkaround()
   

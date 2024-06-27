@@ -4,7 +4,7 @@ import React from 'react';
 import Heading from './Heading';
 import { Button } from 'flowbite-react';
 import { signIn } from 'next-auth/react';
-import { useParamsStore } from '../hooks/useParamsStore';
+import { useParamsStore } from '../../hooks/useParamsStore';
 
 type Props = {
 	title?: string;
@@ -50,7 +50,7 @@ export default function NoContent({
 							focus:border-4 focus:border-fuchsia-500
 						'
 					>
-						Login
+						Reset
 					</button>
 				)}
 				{showLogin && (

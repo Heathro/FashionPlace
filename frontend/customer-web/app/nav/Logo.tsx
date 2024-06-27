@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { useParamsStore } from '../hooks/useParamsStore'
+import { useParamsStore } from '../../hooks/useParamsStore'
 import { IoShirtOutline } from 'react-icons/io5'
 
 export default function Logo() {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from 'flowbite-react'
-import { useParamsStore } from '../hooks/useParamsStore'
+import { useParamsStore } from '../../hooks/useParamsStore'
 
 
 const orderOptions = [

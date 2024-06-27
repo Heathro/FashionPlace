@@ -35,8 +35,8 @@ export default function UserActions() {
             focus:text-black focus:bg-fuchsia-500
           '
         >
-          <Link href='/session'>
-            Session (dev)
+          <Link href='/dev'>
+            Dev
           </Link>
         </Dropdown.Item>
 

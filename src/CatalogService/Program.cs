@@ -5,31 +5,40 @@ using CatalogService.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<CatalogDbContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"));
-});
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddMassTransit(x =>
-{
-    x.AddEntityFrameworkOutbox<CatalogDbContext>(options =>
+builder.Services
+    .AddControllers();
+
+builder.Services
+    .AddDbContext<CatalogDbContext>(options =>
     {
-        options.QueryDelay = TimeSpan.FromSeconds(10);
-        options.UsePostgres();
-        options.UseBusOutbox();
+        options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresDb"));
     });
-    x.UsingRabbitMq((context, config) =>
+
+builder.Services
+    .AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services
+    .AddMassTransit(x =>
     {
-        config.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+        x.AddEntityFrameworkOutbox<CatalogDbContext>(options =>
         {
-            host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
-            host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+            options.QueryDelay = TimeSpan.FromSeconds(10);
+            options.UsePostgres();
+            options.UseBusOutbox();
         });
-        config.ConfigureEndpoints(context);
+        x.UsingRabbitMq((context, config) =>
+        {
+            config.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+            {
+                host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+                host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+            });
+            config.ConfigureEndpoints(context);
+        });
     });
-});
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = builder.Configuration["IdentityServiceUrl"];
@@ -44,13 +53,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-try
-{
-    DbInitializer.InitDb(app);
-}
-catch (Exception e)
-{
-    Console.WriteLine("\n\n\n======>>>>>> Failed to seed database. Error: " + e.Message + ".\n\n\n");
-}
+DbInitializer.InitDb(app);
 
 app.Run();

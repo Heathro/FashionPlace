@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { FaSearch } from 'react-icons/fa'
-import { useParamsStore } from '../hooks/useParamsStore'
+import { useParamsStore } from '../../hooks/useParamsStore'
 
 export default function Searchbar() {
   const setParams = useParamsStore(state => state.setParams)

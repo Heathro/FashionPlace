@@ -1,6 +1,8 @@
-﻿namespace CatalogService.DTOs;
+﻿using NotificationService.DTOs;
 
-public class ProductDto
+namespace Contracts;
+
+public class ProductAdded
 {
     public Guid Id { get; set; }
     public string Description { get; set; }

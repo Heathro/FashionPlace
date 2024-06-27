@@ -1,17 +1,17 @@
 'use server'
 
+import { fetchWrapper } from "@/lib/fetchWrapper";
 import { PagedResult, Product } from "@/types";
-import { getTokenWorkaround } from "./authActions";
 
-export async function getData(params: string): Promise<PagedResult<Product>> {
-  const response = await fetch(`http://localhost:6001/search${params}`)
-  if (!response.ok) throw new Error('Failed to fetch data')
-  return response.json()
+export async function getProducts(query: string): Promise<PagedResult<Product>> {
+  return await fetchWrapper.get(`search${query}`)
+}
+
+export async function getProduct(id: string): Promise<Product> {
+  return await fetchWrapper.get(`catalog/products/${id}`)
 }
 
 export async function createProductTest() {
-  const token = await getTokenWorkaround()
-
   const data = {
     "description": "test",
     "brand": "test",
@@ -42,14 +42,5 @@ export async function createProductTest() {
     ]
   }
 
-  const res = await fetch('http://localhost:6001/catalog/products', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token?.access_token
-    },
-    body: JSON.stringify(data)
-  })
-
-  return { status: res.status, message: res.statusText }
+  return await fetchWrapper.post('catalog/products', data)
 }

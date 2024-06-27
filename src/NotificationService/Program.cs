@@ -1,20 +1,14 @@
 using MassTransit;
-using SearchService.Data;
-using SearchService.Messages;
+using NotificationService.Hubs;
+using NotificationService.Messages;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services
-    .AddControllers();
-
-builder.Services
-    .AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services
     .AddMassTransit(x =>
     {
         x.AddConsumersFromNamespaceContaining<ProductAddedConsumer>();
-        x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("search", false));
+        x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("notification", false));
         x.UsingRabbitMq((context, config) =>
         {
             config.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
@@ -22,20 +16,15 @@ builder.Services
                 host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
                 host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
             });
-            config.ReceiveEndpoint("search-product-added", endpoint =>
-            {
-                endpoint.UseMessageRetry(retry => retry.Interval(5, 5));
-                endpoint.ConfigureConsumer<ProductAddedConsumer>(context);
-            });
             config.ConfigureEndpoints(context);
         });
     });
 
+builder.Services
+    .AddSignalR();
+
 var app = builder.Build();
 
-app.UseAuthorization();
-app.MapControllers();
-
-await DbInitializer.InitDb(app);
+app.MapHub<NotificationHub>("/notification");
 
 app.Run();

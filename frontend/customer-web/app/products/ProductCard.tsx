@@ -2,6 +2,7 @@ import React from 'react'
 import formatPrice from '../helpers/formatters';
 import { Product, Variant } from '@/types';
 import ProductImage from './ProductImage'
+import Link from 'next/link';
 
 type Props = {
   product: Product
@@ -29,7 +30,7 @@ export default function ProductCard({ product, orderBy }: Props) {
   const sizes = Array.from(new Set(product.variants.map((variant: Variant) => variant.size)));
 
   return (
-    <a href='#' className='group'>
+    <Link href={`/products/details/${product.id}`} className='group'>
       <ProductImage imageUrl={variant.imageUrl} />
       <div>
         <p className='text-sm sm:text-base md:text-sm text-gray-600 mt-1 sm:mt-2'>{product.brand}</p>
@@ -45,6 +46,6 @@ export default function ProductCard({ product, orderBy }: Props) {
           <p className='text-lg sm:text-xl md:text-2xl mt-1 sm:mt-2'>£{formatPrice(variant.price)}</p>
         )}
       </div>
-    </a>
+    </Link>
   )
 }

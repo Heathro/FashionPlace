@@ -5,6 +5,6 @@ export const config = {
     '/session'
   ],
   pages: {
-    signIn: '/api/auth/signin'
+    signIn: '/api/auth/signIn'
   }
 }
