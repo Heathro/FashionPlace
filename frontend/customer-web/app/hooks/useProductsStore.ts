@@ -1,6 +1,6 @@
 import { createWithEqualityFn } from "zustand/traditional"
 import { shallow } from "zustand/shallow"
-import { PagedResult, Product } from "@/types"
+import { PagedResult, Product } from "../types"
 
 type State = {
   products: Product[],

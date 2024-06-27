@@ -1,6 +1,6 @@
 import React from 'react'
 import formatPrice from '../helpers/formatters';
-import { Product, Variant } from '@/types';
+import { Product, Variant } from '../types';
 import ProductImage from './ProductImage'
 import Link from 'next/link';
 

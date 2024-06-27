@@ -1,5 +1,6 @@
 import './globals.css';
 import NavBar from './nav/NavBar';
+import SignalRProvider from './providers/SignalRProvider';
 
 export const metadata = {
   title: 'Fashion Place',
@@ -16,7 +17,7 @@ export default function RootLayout({
       <body>
         <NavBar />
         <main className='container mx-auto px-5 pt-10'>
-          {children}
+          <SignalRProvider children={children} />
         </main>
       </body>
     </html>

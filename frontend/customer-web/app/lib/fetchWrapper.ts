@@ -9,8 +9,7 @@ async function get(url: string) {
     method: 'GET',
     headers: await getHeaders()
   }
-  const response = await fetch(baseUrl + url, requestOptions)
-  return await handleResponse(response)
+  return fetchData(url, requestOptions)
 }
 
 async function post(url: string, body: {}) {
@@ -19,8 +18,7 @@ async function post(url: string, body: {}) {
     headers: await getHeaders(),
     body: JSON.stringify(body)
   }
-  const response = await fetch(baseUrl + url, requestOptions)
-  return await handleResponse(response)
+  return fetchData(url, requestOptions)
 }
 
 async function put(url: string, body: {}) {
@@ -29,8 +27,7 @@ async function put(url: string, body: {}) {
     headers: await getHeaders(),
     body: JSON.stringify(body)
   }
-  const response = await fetch(baseUrl + url, requestOptions)
-  return await handleResponse(response)
+  return fetchData(url, requestOptions)
 }
 
 async function del(url: string) {
@@ -38,8 +35,7 @@ async function del(url: string) {
     method: 'DELETE',
     headers: await getHeaders()
   }
-  const response = await fetch(baseUrl + url, requestOptions)
-  return await handleResponse(response)
+  return fetchData(url, requestOptions)
 }
 
 async function getHeaders() {
@@ -47,20 +43,31 @@ async function getHeaders() {
   const headers = { 'Content-Type': 'application/json' } as any
 
   if (token) headers.Authorization = 'Bearer ' + token.access_token
-
+  
   return headers
+}
+
+async function fetchData(url: string, requestOptions: RequestInit) {
+  const response = await fetch(baseUrl + url, requestOptions)
+  return await handleResponse(response)
 }
 
 async function handleResponse(response: Response) {
   const text = await response.text()
-  const data = text && JSON.parse(text)
+  
+  let data
+  try {
+    data = JSON.parse(text)
+  } catch (error) {
+    data = text
+  }
 
   if (response.ok) {
     return data || response.statusText
   } else {
     const error = {
       status: response.status,
-      message: response.statusText
+      message: typeof data === 'string' ? data : response.statusText
     }
     return {error};
   }

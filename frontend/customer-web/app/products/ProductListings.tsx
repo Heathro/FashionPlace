@@ -5,10 +5,10 @@ import { shallow } from 'zustand/shallow'
 import queryString from 'query-string'
 import AppPagination from '../components/AppPagination'
 import { getProducts } from '../actions/productActions'
-import { useParamsStore } from '../../hooks/useParamsStore'
+import { useParamsStore } from '../hooks/useParamsStore'
 import ProductFilters from './ProductFilters'
 import ProductCard from './ProductCard'
-import { useProductsStore } from '../../hooks/useProductsStore'
+import { useProductsStore } from '../hooks/useProductsStore'
 import NoContent from '../components/NoContent'
 
 export default function ProductListings() {

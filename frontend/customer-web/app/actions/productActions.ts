@@ -1,7 +1,8 @@
 'use server'
 
-import { fetchWrapper } from "@/lib/fetchWrapper";
-import { PagedResult, Product } from "@/types";
+import { fetchWrapper } from "../lib/fetchWrapper"
+import { PagedResult, Product } from "../types"
+
 
 export async function getProducts(query: string): Promise<PagedResult<Product>> {
   return await fetchWrapper.get(`search${query}`)
