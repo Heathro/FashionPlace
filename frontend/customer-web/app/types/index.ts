@@ -49,3 +49,15 @@ export type Categories = {
   name: string
   subCategories: Categories[]
 }
+
+export type MessageThread = {
+  id: string,
+  connectionId: string,
+  messages: Message[]
+}
+
+export type Message = {
+  id: string,
+  isUser: boolean,
+  content: string
+}

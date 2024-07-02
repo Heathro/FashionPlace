@@ -35,6 +35,18 @@ export default function UserActions() {
             focus:text-black focus:bg-fuchsia-500
           '
         >
+          <Link href='/chat'>
+            Chat
+          </Link>
+        </Dropdown.Item>
+
+        <Dropdown.Item
+          className='
+            text-white text-lg
+            hover:text-black hover:bg-fuchsia-500
+            focus:text-black focus:bg-fuchsia-500
+          '
+        >
           <Link href='/dev'>
             Dev
           </Link>

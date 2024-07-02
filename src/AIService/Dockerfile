@@ -12,11 +12,11 @@ COPY src/SearchService/SearchService.csproj src/SearchService/SearchService.cspr
 
 RUN dotnet restore FashionPlace.sln
 
-COPY src/CatalogService src/CatalogService
-WORKDIR /app/src/CatalogService
+COPY src/AIService src/AIService
+WORKDIR /app/src/AIService
 RUN dotnet publish -c Release -o /app/src/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/src/out .
-ENTRYPOINT [ "dotnet", "CatalogService.dll" ]
+ENTRYPOINT [ "dotnet", "AIService.dll" ]

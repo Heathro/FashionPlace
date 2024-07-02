@@ -16,7 +16,6 @@ public class CatalogDbContext : DbContext
     public DbSet<Variant> Variants { get; set; }
     public DbSet<Size> Sizes { get; set; }
     public DbSet<Color> Colors { get; set; }
-
     public DbSet<Specification> Specifications { get; set; }
     public DbSet<SpecificationType> SpecificationTypes { get; set; }
 

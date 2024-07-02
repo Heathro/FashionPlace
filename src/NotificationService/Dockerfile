@@ -3,6 +3,7 @@ WORKDIR /app
 EXPOSE 80
 
 COPY FashionPlace.sln FashionPlace.sln
+COPY src/AIService/AIService.csproj src/AIService/AIService.csproj
 COPY src/CatalogService/CatalogService.csproj src/CatalogService/CatalogService.csproj
 COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.csproj
 COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityService.csproj
