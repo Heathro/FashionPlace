@@ -1,8 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using AIService.Data;
 using AIService.Hubs;
+using AIService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddScoped<ModelService>();
+
+builder.Services
+    .AddHttpClient<ModelHttpClient>();
 
 builder.Services
     .AddDbContext<AIDbContext>(options =>

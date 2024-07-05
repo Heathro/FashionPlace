@@ -10,6 +10,9 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<MessageThread, MessageThreadDto>();
         CreateMap<Message, MessageDto>();
-        CreateMap<MessageDto, Message>();
+
+        CreateMap<MessageThreadDto, ModelChatRequest>();
+        CreateMap<MessageDto, ModelChatMessage>()
+            .ForMember(m => m.role, o => o.MapFrom(m => m.IsUser ? "user" : "assistant"));
     }
 }

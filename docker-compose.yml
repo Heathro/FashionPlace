@@ -1,28 +1,32 @@
 services:
     postgres:
         image: postgres
+        container_name: postgres
         environment:
             - POSTGRES_PASSWORD=postgres
         ports:
             - 5432:5432
         volumes:
-            - /var/lib/postgresql/data
+            - postgres:/var/lib/postgresql/data
     mongo:
         image: mongo
+        container_name: mongo
         environment:
             - MONGO_INITDB_ROOT_USERNAME=mongo
             - MONGO_INITDB_ROOT_PASSWORD=mongo
         ports:
             - 27017:27017
         volumes:
-            - /var/lib/mongodb/data
+            - mongo:/var/lib/mongodb/data
     rabbitmq:
         image: rabbitmq:3-management-alpine
+        container_name: rabbitmq
         ports:
             - 5672:5672
             - 15672:15672
     identity:
-        image: heathroru/identity:latest
+        image: heathroru/identity:latest        
+        container_name: identity
         build:
             context: .
             dockerfile: src/IdentityService/Dockerfile
@@ -35,7 +39,8 @@ services:
         depends_on:
             - postgres
     gateway:
-        image: heathroru/gateway:latest
+        image: heathroru/gateway:latest        
+        container_name: gateway
         build:
             context: .
             dockerfile: src/GatewayService/Dockerfile
@@ -46,6 +51,7 @@ services:
             - 6001:80
     catalog:
         image: heathroru/catalog:latest
+        container_name: catalog
         build:
             context: .
             dockerfile: src/CatalogService/Dockerfile
@@ -62,6 +68,7 @@ services:
             - rabbitmq
     search:
         image: heathroru/search:latest
+        container_name: search
         build:
             context: .
             dockerfile: src/SearchService/Dockerfile
@@ -77,6 +84,7 @@ services:
             - rabbitmq
     notification:
         image: heathroru/notification:latest
+        container_name: notification
         build:
             context: .
             dockerfile: src/NotificationService/Dockerfile
@@ -90,6 +98,7 @@ services:
             - rabbitmq
     ai:
         image: heathroru/ai:latest
+        container_name: ai
         build:
             context: .
             dockerfile: src/AIService/Dockerfile
@@ -97,7 +106,24 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
             - ASPNETCORE_URLS=http://+:80
             - ConnectionStrings__PostgresDb=Server=postgres:5432;User Id=postgres;Password=postgres;Database=ai
+            - OllamaUrl=http://ollama:11434
         ports:
             - 7004:80
         depends_on:
             - postgres
+    ollama:
+        image: ollama/ollama
+        container_name: ollama
+        ports:
+            - "11434:11434"
+        volumes:
+            - ollama:/root/.ollama
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - capabilities: [gpu]
+volumes:
+    postgres:
+    mongo:
+    ollama:

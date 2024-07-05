@@ -51,28 +51,37 @@ export default function Chat() {
   }, [connection])
 
   return (
-    <>
+    <div className='w-1/3 mx-auto'>
       {messageThread && (
         <>
           <div>
             {messageThread.messages.map((message) => (
-              <div key={message.id}>
+              <div
+                key={message.id}
+                className={`
+                  p-2 m-2 rounded
+                  ${message.isUser ? 'bg-green-100 text-right' : 'bg-red-100 text-left'}
+                `}
+              >
                 {message.content}
               </div>
             ))}
           </div>
           
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className='flex justify-center'
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <input 
               type="text"
               {...register('message', { required: true })}
               placeholder="Type your message"
             />
             {errors.message && <span>This field is required</span>}
-            <button type="submit">Send</button>
+            <button className='ml-4' type="submit">Send</button>
           </form>
         </>
       )}
-  </>
+  </div>
   )
 }
