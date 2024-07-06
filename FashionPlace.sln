@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIService", "src\AIService\AIService.csproj", "{EC92C6B9-6BEF-414B-86AD-217AB4F31290}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{80CE1A16-BCDF-467A-8F02-26B8CA32E17F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "business", "frontend\business\business.csproj", "{F5B1851C-2180-40BB-BA95-059CEEFFFEC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,10 @@ Global
 		{EC92C6B9-6BEF-414B-86AD-217AB4F31290}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC92C6B9-6BEF-414B-86AD-217AB4F31290}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC92C6B9-6BEF-414B-86AD-217AB4F31290}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5B1851C-2180-40BB-BA95-059CEEFFFEC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B1851C-2180-40BB-BA95-059CEEFFFEC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5B1851C-2180-40BB-BA95-059CEEFFFEC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B1851C-2180-40BB-BA95-059CEEFFFEC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +66,6 @@ Global
 		{AEB10F73-FFB0-4CE7-9E1B-1DD863E6423D} = {0C910377-0701-4649-9D8E-7EEF71098CAB}
 		{F2E0925D-F01D-47C9-BA3F-DF2F70FB1032} = {0C910377-0701-4649-9D8E-7EEF71098CAB}
 		{EC92C6B9-6BEF-414B-86AD-217AB4F31290} = {0C910377-0701-4649-9D8E-7EEF71098CAB}
+		{F5B1851C-2180-40BB-BA95-059CEEFFFEC6} = {80CE1A16-BCDF-467A-8F02-26B8CA32E17F}
 	EndGlobalSection
 EndGlobal
