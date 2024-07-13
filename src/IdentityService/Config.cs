@@ -41,17 +41,11 @@ public static class Config
             },
             new Client
             {
-                ClientId = "business-desktop",
-                ClientName = "Business-Desktop",
-                ClientSecrets = { new Secret("secret-business-desktop".Sha256()) },
-                AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
-                RequirePkce = false,
-                RedirectUris = { "myapp://auth/callback" },
-                PostLogoutRedirectUris = { "myapp://auth/logout-callback" },
-                AllowOfflineAccess = true,
+                ClientId = "business",
+                ClientName = "Business",
                 AllowedScopes = { "openid", "profile", "fashionPlace" },
-                AccessTokenLifetime = 3600 * 24 * 30,
-                AlwaysIncludeUserClaimsInIdToken = true
+                ClientSecrets = { new Secret("secret-business".Sha256()) },
+                AllowedGrantTypes = { GrantType.ResourceOwnerPassword }
             }
         ];
 }

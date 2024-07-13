@@ -5,16 +5,129 @@
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="30,0"
+            Padding="10,10"
             Spacing="25">
 
-            <Button
-                x:Name="CreateProduct"
-                Text="Create Product" 
-                SemanticProperties.Hint="creating product"
-                Clicked="OnCreateProduct"
-                HorizontalOptions="Fill" />
+            <Grid x:Name="LoginGrid" IsVisible="True" Margin="0,200,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <HorizontalStackLayout
+                    Grid.Row="0"
+                    Spacing="10"
+                    HorizontalOptions="Center">
+
+                    <Entry
+                        x:Name="Username"
+                        Placeholder="Username"
+                        WidthRequest="150"
+                        VerticalOptions="Center"
+                        Completed="OnEntryCompleted"/>
+
+                    <Entry
+                        x:Name="Password"
+                        Placeholder="Password"
+                        IsPassword="True"
+                        WidthRequest="150"
+                        VerticalOptions="Center"
+                        Completed="OnEntryCompleted"/>
+
+                    <Button
+                        x:Name="LoginButton"
+                        Text="Login"
+                        Clicked="OnLoginButtonClicked">
+                    </Button>
+                </HorizontalStackLayout>
+
+                <Label
+                    x:Name="ErrorMessage"
+                    Margin="0,10,0,0"
+                    Grid.Row="1"
+                    TextColor="Red"
+                    IsVisible="False"
+                    VerticalOptions="End"
+                    HorizontalOptions="Center"/>
+            </Grid>
+
+            <Grid x:Name="MainGrid" IsVisible="False" RowSpacing="15"
+                RowDefinitions="Auto, *, Auto"
+                ColumnDefinitions=".5*, .5*">
+
+                <Button
+                    Grid.Column="2"
+                    x:Name="LogoutButton"
+                    Text="Logout"
+                    Clicked="OnLogoutButtonClicked"
+                    HorizontalOptions="End">
+                </Button>
                 
+                <Grid 
+                    Grid.Row="1"
+                    x:Name="CreateProductForm"
+                    RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+                    RowSpacing="10">
+
+                    <Label Grid.Row="0" Text="Brand:" FontSize="18"/>
+                    <Entry Grid.Row="1" x:Name="Brand"/>
+
+                    <Label Grid.Row="2" Text="Model:" FontSize="18"/>
+                    <Entry Grid.Row="3" x:Name="Model"/>
+
+                    <Label Grid.Row="4" Text="Description:" FontSize="18"/>
+                    <Editor Grid.Row="5" x:Name="Description"/>
+
+                    <Label Grid.Row="6" Text="Categories:" FontSize="18"/>
+
+                    <CollectionView Grid.Row="7" x:Name="Categories" ItemsSource="{Binding CreateCategories}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout>
+                                    <Grid
+                                        RowDefinitions="Auto, *"
+                                        ColumnDefinitions="Auto, *"
+                                        Margin="0,15,0,0">
+
+                                        <Label 
+                                            Text="Parent Category"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Picker
+                                            Grid.Column="1"
+                                            ItemsSource="{Binding CategoryPickers}" 
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedIndexChanged="SelectParentCategoryId"
+                                            SelectedIndex="0"/>
+                                        <Label
+                                            Grid.Row="1"
+                                            Text="New Category (commas)"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Entry
+                                            Grid.Row="1" 
+                                            Grid.Column="1"
+                                            Text="{Binding NewCategories}"/>
+
+                                    </Grid>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Button Grid.Row="8" Text="Add Category" Command="{Binding AddNewCategoryCommand}" />
+                </Grid>
+
+                <Button
+                    Grid.Row="2"
+                    x:Name="CreateProduct"
+                    Text="Create Product"
+                    SemanticProperties.Hint="creating product"
+                    Clicked="OnCreateProduct"
+                    HorizontalOptions="Start">
+                </Button>
+            </Grid>
+
         </VerticalStackLayout>
     </ScrollView>
 
