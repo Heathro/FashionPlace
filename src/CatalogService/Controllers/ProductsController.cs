@@ -110,11 +110,25 @@ public class ProductsController : ControllerBase
         foreach (var variant in createProductDto.Variants)
         {
             var color = await _context.Colors.FirstOrDefaultAsync(c => c.Name == variant.Color);
+            if (color == null)
+            {
+                color = new Color { Name = variant.Color };
+                _context.Colors.Add(color);
+                await _context.SaveChangesAsync();
+            }
+
             var size = await _context.Sizes.FirstOrDefaultAsync(s => s.Name == variant.Size);
+            if (size == null)
+            {
+                size = new Size { Name = variant.Size };
+                _context.Sizes.Add(size);
+                await _context.SaveChangesAsync();
+            }
+
             variants.Add(new Variant
             {
-                Color = color ?? new Color { Name = variant.Color },
-                Size = size ?? new Size { Name = variant.Size },
+                Color = color,
+                Size = size,
                 Price = variant.Price,
                 Discount = variant.Discount,
                 Quantity = variant.Quantity,
