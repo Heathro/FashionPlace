@@ -9,11 +9,36 @@ namespace business;
 public class MainViewModel : INotifyPropertyChanged
 {
     private readonly List<CategoryPicker> _categoryPickers;
+    public ObservableCollection<string> Brands { get; set; }
+    private string _newBrand;
+    public string NewBrand
+    {
+        get { return _newBrand; }
+        set
+        {
+            if (_newBrand != value)
+            {
+                _newBrand = value;
+                OnPropertyChanged(nameof(NewBrand));
+            }
+        }
+    }
     public ObservableCollection<CreateCategory> CreateCategories { get; set; }
     public ICommand AddNewCategoryCommand { get; }
 
-    public MainViewModel(List<CategoryDto> categories)
+    public MainViewModel
+    (
+        List<CategoryDto> categories,
+        List<string> brands,
+        List<string> colors,
+        List<string> sizes,
+        List<string> specificationTypes
+    )
     {
+        Brands = new ObservableCollection<string>(brands);
+        Brands.Insert(0, "(New)");
+        NewBrand = "";
+
         _categoryPickers = ConvertToCategoryPicker(categories);
         CreateCategories = new ObservableCollection<CreateCategory>();
         AddNewCategoryCommand = new Command(AddNewCategory);

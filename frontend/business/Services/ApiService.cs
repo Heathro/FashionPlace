@@ -59,4 +59,52 @@ public class ApiService
 
 		return categories;
 	}
+
+	public async Task<List<string>> GetBrands()
+	{
+		var httpClient = new HttpClient();
+
+		var brands = await httpClient.GetFromJsonAsync<List<string>>
+		(
+			"http://localhost:6001/catalog/brands"
+		);
+
+		return brands;
+	}
+
+	public async Task<List<string>> GetColors()
+	{
+		var httpClient = new HttpClient();
+
+		var colors = await httpClient.GetFromJsonAsync<List<string>>
+		(
+			"http://localhost:6001/catalog/colors"
+		);
+
+		return colors;
+	}
+
+	public async Task<List<string>> GetSizes()
+	{
+		var httpClient = new HttpClient();
+
+		var sizes = await httpClient.GetFromJsonAsync<List<string>>
+		(
+			"http://localhost:6001/catalog/sizes"
+		);
+
+		return sizes;
+	}
+
+	public async Task<List<string>> GetSpecificationTypes()
+	{
+		var httpClient = new HttpClient();
+
+		var specificationTypes = await httpClient.GetFromJsonAsync<List<string>>
+		(
+			"http://localhost:6001/catalog/specificationTypes"
+		);
+
+		return specificationTypes;
+	}
 }

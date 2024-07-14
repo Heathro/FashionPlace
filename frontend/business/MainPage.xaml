@@ -69,18 +69,30 @@
                     RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
                     RowSpacing="10">
 
-                    <Label Grid.Row="0" Text="Brand:" FontSize="18"/>
-                    <Entry Grid.Row="1" x:Name="Brand"/>
+                    <Label Grid.Row="0" Text="Brand" FontSize="18" TextColor="Violet"/>
+                    <Grid Grid.Row="1" ColumnDefinitions="*, *" ColumnSpacing="5">
+                        <Picker                        
+                            x:Name="NewBrandPicker"
+                            ItemsSource="{Binding Brands}" 
+                            ItemDisplayBinding="{Binding}"
+                            SelectedIndexChanged="SelectBrand"
+                            SelectedIndex="0"
+                            Grid.ColumnSpan="2"/>
+                        <Entry
+                            Grid.Column="1"
+                            x:Name="NewBrandEntry"
+                            Text="{Binding NewBrand, Mode=TwoWay}"
+                            IsVisible="False"/>
+                    </Grid>
 
-                    <Label Grid.Row="2" Text="Model:" FontSize="18"/>
+                    <Label Grid.Row="2" Text="Model" FontSize="18" TextColor="Violet"/>
                     <Entry Grid.Row="3" x:Name="Model"/>
 
-                    <Label Grid.Row="4" Text="Description:" FontSize="18"/>
-                    <Editor Grid.Row="5" x:Name="Description"/>
+                    <Label Grid.Row="4" Text="Description" FontSize="18" TextColor="Violet"/>
+                    <Editor Grid.Row="5" x:Name="Description" HeightRequest="100"/>
 
-                    <Label Grid.Row="6" Text="Categories:" FontSize="18"/>
-
-                    <CollectionView Grid.Row="7" x:Name="Categories" ItemsSource="{Binding CreateCategories}">
+                    <Label Grid.Row="6" Text="Categories" FontSize="18" TextColor="Violet"/>
+                    <CollectionView Grid.Row="7" ItemsSource="{Binding CreateCategories}">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <StackLayout>
@@ -101,7 +113,7 @@
                                             SelectedIndex="0"/>
                                         <Label
                                             Grid.Row="1"
-                                            Text="New Category (commas)"
+                                            Text="Subcategories ( , )"
                                             Margin="0,11,10,0"
                                             TextColor="Gray"/>
                                         <Entry

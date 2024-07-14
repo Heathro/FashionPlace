@@ -33,6 +33,9 @@ public partial class MainPage : ContentPage
 	private async void OnCreateProduct(object sender, EventArgs e)
 	{
 		var viewModel = BindingContext as MainViewModel;
+
+		var brand = viewModel.NewBrand;
+
 		var categories = new List<CreateCategoryDto>();
 		foreach (var createCategory in viewModel.CreateCategories)
 		{
@@ -54,7 +57,7 @@ public partial class MainPage : ContentPage
 		var createProductDto = new CreateProductDto
 		{
 			Description = Description.Text,
-			Brand = Brand.Text,
+			Brand = brand,
 			Model = Model.Text,
 			Categories = categories,
 			Variants = new List<CreateVariantDto>
@@ -97,8 +100,14 @@ public partial class MainPage : ContentPage
 			ToggleLoginLogoutVisibility(true);
 			ErrorMessage.IsVisible = false;
 
-			
-			BindingContext = new MainViewModel(await apiService.GetCategories());
+			BindingContext = new MainViewModel
+			(
+				await apiService.GetCategories(),
+				await apiService.GetBrands(),
+				await apiService.GetColors(),
+				await apiService.GetSizes(),
+				await apiService.GetSpecificationTypes()
+			);
 		}
 		else
 		{
@@ -137,6 +146,27 @@ public partial class MainPage : ContentPage
             }
         }
     }
+
+	private void SelectBrand(object sender, EventArgs e)
+	{
+		if (sender is Picker picker && picker.SelectedItem is string selectedBrand)
+    	{
+			var viewModel = BindingContext as MainViewModel;
+			if (selectedBrand == "(New)")
+			{
+				viewModel.NewBrand = "";
+				NewBrandEntry.IsVisible = true;
+				NewBrandEntry.Focus();
+				NewBrandPicker.SetValue(Grid.ColumnSpanProperty, 1);
+			}
+			else
+			{
+				viewModel.NewBrand = selectedBrand;
+				NewBrandEntry.IsVisible = false;
+				NewBrandPicker.SetValue(Grid.ColumnSpanProperty, 2);
+			}
+    	}
+	}
 
 	private List<string> GetNewCategories(string input)
 	{
