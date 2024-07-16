@@ -66,13 +66,13 @@
                 <Grid 
                     Grid.Row="1"
                     x:Name="CreateProductForm"
-                    RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+                    RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
                     RowSpacing="10">
 
                     <Label Grid.Row="0" Text="Brand" FontSize="18" TextColor="Violet"/>
-                    <Grid Grid.Row="1" ColumnDefinitions="*, *" ColumnSpacing="5">
+                    <Grid Grid.Row="1" ColumnDefinitions="*, *" ColumnSpacing="5" Margin="0,0,0,20">
                         <Picker                        
-                            x:Name="NewBrandPicker"
+                            x:Name="BrandPicker"
                             ItemsSource="{Binding Brands}" 
                             ItemDisplayBinding="{Binding}"
                             SelectedIndexChanged="SelectBrand"
@@ -80,16 +80,16 @@
                             Grid.ColumnSpan="2"/>
                         <Entry
                             Grid.Column="1"
-                            x:Name="NewBrandEntry"
-                            Text="{Binding NewBrand, Mode=TwoWay}"
+                            x:Name="BrandEntry"
+                            Text="{Binding Brand}"
                             IsVisible="False"/>
                     </Grid>
 
                     <Label Grid.Row="2" Text="Model" FontSize="18" TextColor="Violet"/>
-                    <Entry Grid.Row="3" x:Name="Model"/>
+                    <Entry Grid.Row="3" x:Name="Model" Margin="0,0,0,20"/>
 
                     <Label Grid.Row="4" Text="Description" FontSize="18" TextColor="Violet"/>
-                    <Editor Grid.Row="5" x:Name="Description" HeightRequest="100"/>
+                    <Editor Grid.Row="5" x:Name="Description" HeightRequest="100" Margin="0,0,0,20"/>
 
                     <Label Grid.Row="6" Text="Categories" FontSize="18" TextColor="Violet"/>
                     <CollectionView Grid.Row="7" ItemsSource="{Binding CreateCategories}">
@@ -98,8 +98,8 @@
                                 <StackLayout>
                                     <Grid
                                         RowDefinitions="Auto, *"
-                                        ColumnDefinitions="Auto, *"
-                                        Margin="0,15,0,0">
+                                        ColumnDefinitions="Auto, *, Auto"
+                                        Margin="0,20,0,0">
 
                                         <Label 
                                             Text="Parent Category"
@@ -110,7 +110,8 @@
                                             ItemsSource="{Binding CategoryPickers}" 
                                             ItemDisplayBinding="{Binding Name}"
                                             SelectedIndexChanged="SelectParentCategoryId"
-                                            SelectedIndex="0"/>
+                                            SelectedIndex="0"
+                                            Grid.ColumnSpan="2"/>
                                         <Label
                                             Grid.Row="1"
                                             Text="Subcategories ( , )"
@@ -120,14 +121,200 @@
                                             Grid.Row="1" 
                                             Grid.Column="1"
                                             Text="{Binding NewCategories}"/>
+                                        <Button
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Text="X"
+                                            CommandParameter="{Binding Id}"
+                                            Clicked="OnDeleteCategoryClicked"/>
 
                                     </Grid>
                                 </StackLayout>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
+                    <Button
+                        Grid.Row="8"
+                        Text="Add Category"
+                        Command="{Binding AddCategoryCommand}"
+                        HorizontalOptions="Start"
+                        Margin="0,10,0,20"/>
 
-                    <Button Grid.Row="8" Text="Add Category" Command="{Binding AddNewCategoryCommand}" />
+                    <Label Grid.Row="9" Text="Variants" FontSize="18" TextColor="Violet"/>
+                    <CollectionView Grid.Row="10" ItemsSource="{Binding CreateVariants}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout>
+                                    <Grid
+                                        RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"
+                                        ColumnDefinitions="Auto, *, Auto"
+                                        Margin="0,20,0,0">
+
+                                        <Label 
+                                            Text="Color"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Grid
+                                            Grid.Column="1"
+                                            ColumnDefinitions="*, *"
+                                            Grid.ColumnSpan="2">
+                                            <Picker
+                                                ItemsSource="{Binding Colors}" 
+                                                ItemDisplayBinding="{Binding}"
+                                                SelectedIndexChanged="SelectColor"
+                                                SelectedIndex="0"
+                                                Grid.ColumnSpan="2"/>
+                                            <Entry
+                                                Grid.Column="1"
+                                                Text="{Binding Color}"
+                                                IsVisible="False"/>
+                                        </Grid>
+
+                                        <Label
+                                            Grid.Row="1"
+                                            Text="Size"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Grid
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            ColumnDefinitions="*, *"
+                                            Grid.ColumnSpan="2">
+                                            <Picker
+                                                ItemsSource="{Binding Sizes}" 
+                                                ItemDisplayBinding="{Binding}"
+                                                SelectedIndexChanged="SelectSize"
+                                                SelectedIndex="0"
+                                                Grid.ColumnSpan="2"/>
+                                            <Entry
+                                                Grid.Column="1"
+                                                Text="{Binding Size}"
+                                                IsVisible="False"/>
+                                        </Grid>
+
+                                        <Label
+                                            Grid.Row="2"
+                                            Text="Price"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Entry
+                                            Grid.Row="2" 
+                                            Grid.Column="1"
+                                            Text="{Binding Price}"
+                                            Keyboard="Numeric"
+                                            Grid.ColumnSpan="2"/>
+
+                                        <Label
+                                            Grid.Row="3"
+                                            Text="Discount"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Entry
+                                            Grid.Row="3" 
+                                            Grid.Column="1"
+                                            Text="{Binding Discount}"
+                                            Keyboard="Numeric"
+                                            Grid.ColumnSpan="2"/>
+
+                                        <Label
+                                            Grid.Row="4"
+                                            Text="Quantity"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Entry
+                                            Grid.Row="4" 
+                                            Grid.Column="1"
+                                            Text="{Binding Quantity}"
+                                            Keyboard="Numeric"
+                                            Grid.ColumnSpan="2"/>
+
+                                        <Label
+                                            Grid.Row="5"
+                                            Text="ImageUrl"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Entry
+                                            Grid.Row="5" 
+                                            Grid.Column="1"
+                                            Text="{Binding ImageUrl}"/>
+                                        <Button
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Text="X"
+                                            CommandParameter="{Binding Id}"
+                                            Clicked="OnDeleteVariantClicked"/>
+
+                                    </Grid>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Button
+                        Grid.Row="11"
+                        Text="Add Variant"
+                        Command="{Binding AddVariantCommand}"
+                        HorizontalOptions="Start"
+                        Margin="0,10,0,20"/>
+                    
+                    <Label Grid.Row="12" Text="Specifications" FontSize="18" TextColor="Violet"/>
+                    <CollectionView Grid.Row="13" ItemsSource="{Binding CreateSpecifications}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout>
+                                    <Grid
+                                        RowDefinitions="Auto, Auto, Auto"
+                                        ColumnDefinitions="Auto, *, Auto"
+                                        Margin="0,20,0,0">
+
+                                        <Label 
+                                            Text="Type"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Grid
+                                            Grid.Column="1"
+                                            ColumnDefinitions="*, *"
+                                            Grid.ColumnSpan="2">
+                                            <Picker
+                                                ItemsSource="{Binding Types}" 
+                                                ItemDisplayBinding="{Binding}"
+                                                SelectedIndexChanged="SelectType"
+                                                SelectedIndex="0"
+                                                Grid.ColumnSpan="2"/>
+                                            <Entry
+                                                Grid.Column="1"
+                                                Text="{Binding Type}"
+                                                IsVisible="False"/>
+                                        </Grid>
+
+                                        <Label
+                                            Grid.Row="2"
+                                            Text="Value"
+                                            Margin="0,11,10,0"
+                                            TextColor="Gray"/>
+                                        <Entry
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Text="{Binding Value}"/>
+
+                                        <Button
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            Text="X"
+                                            CommandParameter="{Binding Id}"
+                                            Clicked="OnDeleteSpecificationClicked"/>
+
+                                    </Grid>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Button
+                        Grid.Row="14" 
+                        Text="Add Specification"
+                        Command="{Binding AddSpecificationCommand}"
+                        HorizontalOptions="Start"
+                        Margin="0,10,0,20"/>
+
                 </Grid>
 
                 <Button
@@ -135,8 +322,7 @@
                     x:Name="CreateProduct"
                     Text="Create Product"
                     SemanticProperties.Hint="creating product"
-                    Clicked="OnCreateProduct"
-                    HorizontalOptions="Start">
+                    Clicked="OnCreateProduct">
                 </Button>
             </Grid>
 

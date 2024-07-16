@@ -34,7 +34,7 @@ public partial class MainPage : ContentPage
 	{
 		var viewModel = BindingContext as MainViewModel;
 
-		var brand = viewModel.NewBrand;
+		var brand = viewModel.Brand;
 
 		var categories = new List<CreateCategoryDto>();
 		foreach (var createCategory in viewModel.CreateCategories)
@@ -54,39 +54,49 @@ public partial class MainPage : ContentPage
 			);
 		};
 
+		var variants = new List<CreateVariantDto>();
+		foreach (var createVariant in viewModel.CreateVariants)
+		{
+			variants.Add
+			(
+				new CreateVariantDto
+				{
+					Color = createVariant.Color,
+					Size = createVariant.Size,
+					Price = createVariant.Price,
+					Discount = createVariant.Discount,
+					Quantity = createVariant.Quantity,
+					ImageUrl = createVariant.ImageUrl
+				}
+			);
+		}
+
+		var specifications = new List<CreateSpecificationDto>();
+		foreach (var createSpecification in viewModel.CreateSpecifications)
+		{
+			specifications.Add
+			(
+				new CreateSpecificationDto
+				{
+					Type = createSpecification.Type,
+					Value = createSpecification.Value
+				}
+			);
+		}
+
 		var createProductDto = new CreateProductDto
 		{
 			Description = Description.Text,
 			Brand = brand,
 			Model = Model.Text,
 			Categories = categories,
-			Variants = new List<CreateVariantDto>
-			{
-				new CreateVariantDto
-				{
-					Color = "new color",
-					Size = "new size",
-					Price = 1000,
-					Discount = 10,
-					Quantity = 10,
-					ImageUrl = ""
-				}
-			},
-			Specifications = new List<CreateSpecificationDto>
-			{
-				new CreateSpecificationDto
-				{
-					Type = "new type",
-					Value = "new value"
-				}
-			}
+			Variants = variants,
+			Specifications = specifications
 		};
 
-		var productDto = await apiService.CreateProduct(createProductDto);
+		await apiService.CreateProduct(createProductDto);
 
-		Console.WriteLine("\n======>>>>>> Create Products:\n");
-		Console.WriteLine(productDto.Id);
-		Console.WriteLine("\n");
+		ResetForm();
 	}
 
 	private async Task LoginAsync()
@@ -100,14 +110,7 @@ public partial class MainPage : ContentPage
 			ToggleLoginLogoutVisibility(true);
 			ErrorMessage.IsVisible = false;
 
-			BindingContext = new MainViewModel
-			(
-				await apiService.GetCategories(),
-				await apiService.GetBrands(),
-				await apiService.GetColors(),
-				await apiService.GetSizes(),
-				await apiService.GetSpecificationTypes()
-			);
+			ResetForm();
 		}
 		else
 		{
@@ -135,6 +138,29 @@ public partial class MainPage : ContentPage
 			MainGrid.IsVisible = false;
 		}
 	}
+
+	private void SelectBrand(object sender, EventArgs e)
+	{
+		if (sender is Picker picker && picker.SelectedItem is string selectedBrand)
+    	{
+			var viewModel = BindingContext as MainViewModel;
+			if (selectedBrand == "(New)")
+			{
+				viewModel.Brand = "";
+				BrandEntry.Text = "";
+				BrandEntry.IsVisible = true;
+				BrandEntry.Focus();
+				BrandPicker.SetValue(Grid.ColumnSpanProperty, 1);
+			}
+			else
+			{
+				viewModel.Brand = selectedBrand;
+				BrandEntry.Text = selectedBrand;
+				BrandEntry.IsVisible = false;
+				BrandPicker.SetValue(Grid.ColumnSpanProperty, 2);
+			}
+    	}
+	}
 	
 	private void SelectParentCategoryId(object sender, EventArgs e)
     {
@@ -146,27 +172,6 @@ public partial class MainPage : ContentPage
             }
         }
     }
-
-	private void SelectBrand(object sender, EventArgs e)
-	{
-		if (sender is Picker picker && picker.SelectedItem is string selectedBrand)
-    	{
-			var viewModel = BindingContext as MainViewModel;
-			if (selectedBrand == "(New)")
-			{
-				viewModel.NewBrand = "";
-				NewBrandEntry.IsVisible = true;
-				NewBrandEntry.Focus();
-				NewBrandPicker.SetValue(Grid.ColumnSpanProperty, 1);
-			}
-			else
-			{
-				viewModel.NewBrand = selectedBrand;
-				NewBrandEntry.IsVisible = false;
-				NewBrandPicker.SetValue(Grid.ColumnSpanProperty, 2);
-			}
-    	}
-	}
 
 	private List<string> GetNewCategories(string input)
 	{
@@ -180,6 +185,125 @@ public partial class MainPage : ContentPage
 							.ToList();
 		}
 		return categories;
+	}
+
+	private void OnDeleteCategoryClicked(object sender, EventArgs e)
+    {
+        var button = (Button)sender;
+        var id = (Guid)button.CommandParameter;
+        (BindingContext as MainViewModel).DeleteCategory(id);
+    }
+
+	private void SelectColor(object sender, EventArgs e)
+    {
+		if (sender is Picker picker && picker.SelectedItem is string selectedColor)
+    	{
+			if (picker.BindingContext is CreateVariant createVariant)
+            {
+            	var parentGrid = (Grid)picker.Parent;
+            	var entry = parentGrid.Children.OfType<Entry>().FirstOrDefault();
+
+            	if (selectedColor == "(New)")
+            	{
+            	    createVariant.Color = "";
+					entry.Focus();
+					entry.Text = "";
+            	    entry.IsVisible = true;
+            	    picker.SetValue(Grid.ColumnSpanProperty, 1);
+            	}
+            	else
+            	{
+            	    createVariant.Color = selectedColor;
+					entry.Text = selectedColor;
+            	    entry.IsVisible = false;
+            	    picker.SetValue(Grid.ColumnSpanProperty, 2);
+            	}
+			}
+    	}
+    }
+
+	private void SelectSize(object sender, EventArgs e)
+    {
+		if (sender is Picker picker && picker.SelectedItem is string selectedSize)
+    	{
+			if (picker.BindingContext is CreateVariant createVariant)
+            {
+            	var parentGrid = (Grid)picker.Parent;
+            	var entry = parentGrid.Children.OfType<Entry>().FirstOrDefault();
+
+            	if (selectedSize == "(New)")
+            	{
+            	    createVariant.Size = "";
+					entry.Text = "";
+            	    entry.IsVisible = true;
+            	    picker.SetValue(Grid.ColumnSpanProperty, 1);
+					entry.Focus();
+            	}
+            	else
+            	{
+            	    createVariant.Size = selectedSize;
+					entry.Text = selectedSize;
+            	    entry.IsVisible = false;
+            	    picker.SetValue(Grid.ColumnSpanProperty, 2);
+            	}
+			}
+    	}
+    }
+
+	private void OnDeleteVariantClicked(object sender, EventArgs e)
+    {
+        var button = (Button)sender;
+        var id = (Guid)button.CommandParameter;
+        (BindingContext as MainViewModel).DeleteVariant(id);
+    }
+
+	private void SelectType(object sender, EventArgs e)
+    {
+		if (sender is Picker picker && picker.SelectedItem is string selectedType)
+    	{
+			if (picker.BindingContext is CreateSpecification createSpecification)
+            {
+            	var parentGrid = (Grid)picker.Parent;
+            	var entry = parentGrid.Children.OfType<Entry>().FirstOrDefault();
+
+            	if (selectedType == "(New)")
+            	{
+            	    createSpecification.Type = "";
+					entry.Text = "";
+            	    entry.IsVisible = true;
+            	    picker.SetValue(Grid.ColumnSpanProperty, 1);
+					entry.Focus();
+            	}
+            	else
+            	{
+            	    createSpecification.Type = selectedType;
+					entry.Text = selectedType;
+            	    entry.IsVisible = false;
+            	    picker.SetValue(Grid.ColumnSpanProperty, 2);
+            	}
+			}
+    	}
+    }
+
+	private void OnDeleteSpecificationClicked(object sender, EventArgs e)
+    {
+        var button = (Button)sender;
+        var id = (Guid)button.CommandParameter;
+        (BindingContext as MainViewModel).DeleteSpecification(id);
+    }
+
+	private async void ResetForm()
+	{
+		BindingContext = new MainViewModel
+		(
+			await apiService.GetCategories(),
+			await apiService.GetBrands(),
+			await apiService.GetColors(),
+			await apiService.GetSizes(),
+			await apiService.GetSpecificationTypes()
+		);
+		Model.Text = "";
+		Description.Text = "";
 	}
 }
 
