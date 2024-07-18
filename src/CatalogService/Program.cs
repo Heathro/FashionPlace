@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MassTransit;
 using CatalogService.Data;
+using CatalogService.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,9 @@ builder.Services
         options.TokenValidationParameters.ValidateAudience = false;
         options.TokenValidationParameters.NameClaimType = "username";
     });
+    
+builder.Services
+    .AddScoped<IUnitOfWork, UnitOfWork>();
     
 var app = builder.Build();
 

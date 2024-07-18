@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CatalogService.Data;
+using CatalogService.Interfaces;
 
 namespace CatalogService.Controllers;
 
@@ -8,17 +7,17 @@ namespace CatalogService.Controllers;
 [Route("api/catalog/specificationTypes")]
 public class SpecificationTypesController : ControllerBase
 {
-    private readonly CatalogDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public SpecificationTypesController(CatalogDbContext context)
+    public SpecificationTypesController(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<string>>> GetSpecificationTypes()
     {
-        var specificationTypes = await _context.SpecificationTypes.Select(s => s.Type).ToListAsync();
+        var specificationTypes = await _unitOfWork.SpecificationTypes.GetSpecificationTypeNamesAsync();
         return Ok(specificationTypes);
     }
 }

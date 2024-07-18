@@ -9,6 +9,7 @@ COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.
 COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityService.csproj
 COPY src/NotificationService/NotificationService.csproj src/NotificationService/NotificationService.csproj
 COPY src/SearchService/SearchService.csproj src/SearchService/SearchService.csproj
+COPY tests/CatalogService.UnitTests/CatalogService.UnitTests.csproj tests/CatalogService.UnitTests/CatalogService.UnitTests.csproj
 
 RUN dotnet restore FashionPlace.sln
 

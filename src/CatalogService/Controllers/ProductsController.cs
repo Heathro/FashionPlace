@@ -7,6 +7,7 @@ using Contracts;
 using CatalogService.Data;
 using CatalogService.DTOs;
 using CatalogService.Entities;
+using CatalogService.Interfaces;
 
 namespace CatalogService.Controllers;
 
@@ -14,13 +15,13 @@ namespace CatalogService.Controllers;
 [Route("api/catalog/products")]
 public class ProductsController : ControllerBase
 {
-    private readonly CatalogDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public ProductsController(CatalogDbContext context, IMapper mapper, IPublishEndpoint publishEndpoint)
+    public ProductsController(IUnitOfWork unitOfWork, IMapper mapper, IPublishEndpoint publishEndpoint)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
         _mapper = mapper;
         _publishEndpoint = publishEndpoint;
     }
@@ -28,54 +29,23 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ProductDto>>> GetProducts()
     {
-        var products = await _context.Products
-            .Include(p => p.Model)
-                .ThenInclude(m => m.Brand)
-            .Include(p => p.ProductCategories)
-                .ThenInclude(pc => pc.Category)
-                    .ThenInclude(c => c.ParentCategory)
-                        .ThenInclude(c => c.ParentCategory)
-                            .ThenInclude(c => c.ParentCategory)
-                                .ThenInclude(c => c.ParentCategory)
-            .Include(p => p.Variants)
-                .ThenInclude(v => v.Color)
-            .Include(p => p.Variants)
-                .ThenInclude(v => v.Size)
-            .Include(p => p.Specifications)
-                .ThenInclude(s => s.SpecificationType)
-            .ToListAsync();
-
-        return _mapper.Map<List<ProductDto>>(products);
+        var products = await _unitOfWork.Products.GetProductsAsync();
+        return Ok(products);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetProduct(Guid id)
     {
-        var product = await _context.Products
-            .Include(p => p.Model)
-                .ThenInclude(m => m.Brand)
-            .Include(p => p.ProductCategories)
-                .ThenInclude(pc => pc.Category)
-                    .ThenInclude(c => c.ParentCategory)
-                        .ThenInclude(c => c.ParentCategory)
-                            .ThenInclude(c => c.ParentCategory)
-                                .ThenInclude(c => c.ParentCategory)
-            .Include(p => p.Variants)
-                .ThenInclude(v => v.Color)
-            .Include(p => p.Variants)
-                .ThenInclude(v => v.Size)
-            .Include(p => p.Specifications)
-                .ThenInclude(s => s.SpecificationType)
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        return _mapper.Map<ProductDto>(product);
+        var product = await _unitOfWork.Products.GetProductAsync(id);
+        if (product == null) return NotFound();
+        return Ok(product);
     }
 
     [Authorize]
     [HttpPost]
     public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto createProductDto)
     {
-        var brand = await _context.Brands.FirstOrDefaultAsync(b => b.Name == createProductDto.Brand);
+        var brand = await _unitOfWork.Brands.GetBrandAsync(createProductDto.Brand);
         var model = new Model
         {
             Name = createProductDto.Model,
@@ -88,41 +58,34 @@ public class ProductsController : ControllerBase
             Category parent = null;
             if (category.ParentCategoryId != null)
             {
-                parent = await _context.Categories
-                    .Include(c => c.ParentCategory)
-                        .ThenInclude(c => c.ParentCategory)
-                            .ThenInclude(c => c.ParentCategory)
-                                .ThenInclude(c => c.ParentCategory)
-                    .FirstOrDefaultAsync(c => c.Id == category.ParentCategoryId);
+                parent = await _unitOfWork.Categories.GetCategoryAsync(category.ParentCategoryId);
             }
-
             Category current = null;
             foreach (var newCategory in category.NewCategories)
             {
                 current = new Category { Name = newCategory, ParentCategory = parent };
                 parent = current;
             }
-
             productCategories.Add(new ProductCategory { Category = current ?? parent });
         }
 
         var variants = new List<Variant>();
         foreach (var variant in createProductDto.Variants)
         {
-            var color = await _context.Colors.FirstOrDefaultAsync(c => c.Name == variant.Color);
+            var color = await _unitOfWork.Colors.GetColorAsync(variant.Color);
             if (color == null)
             {
                 color = new Color { Name = variant.Color };
-                _context.Colors.Add(color);
-                await _context.SaveChangesAsync();
+                _unitOfWork.Colors.AddColor(color);
+                await _unitOfWork.SaveChangesAsync();
             }
 
-            var size = await _context.Sizes.FirstOrDefaultAsync(s => s.Name == variant.Size);
+            var size = await _unitOfWork.Sizes.GetSizeAsync(variant.Size);
             if (size == null)
             {
                 size = new Size { Name = variant.Size };
-                _context.Sizes.Add(size);
-                await _context.SaveChangesAsync();
+                _unitOfWork.Sizes.AddSize(size);
+                await _unitOfWork.SaveChangesAsync();
             }
 
             variants.Add(new Variant
@@ -139,7 +102,7 @@ public class ProductsController : ControllerBase
         var specifications = new List<Specification>();
         foreach (var specification in createProductDto.Specifications)
         {
-            var type = await _context.SpecificationTypes.FirstOrDefaultAsync(s => s.Type == specification.Type);
+            var type = await _unitOfWork.SpecificationTypes.GetSpecificationTypeAsync(specification.Type);
             specifications.Add(new Specification
             {
                 SpecificationType = type ?? new SpecificationType { Type = specification.Type },
@@ -156,16 +119,16 @@ public class ProductsController : ControllerBase
             Specifications = specifications
         };
 
-        _context.Products.Add(product);
+        _unitOfWork.Products.AddProduct(product);
 
-        var newProduct = _mapper.Map<ProductDto>(product);
+        var productDto = _mapper.Map<ProductDto>(product);
 
-        var productAdded = _mapper.Map<ProductAdded>(newProduct);
+        var productAdded = _mapper.Map<ProductAdded>(productDto);
         await _publishEndpoint.Publish(productAdded);
 
-        var result = await _context.SaveChangesAsync() > 0;
+        var result = await _unitOfWork.SaveChangesAsync();
         if (!result) return BadRequest("Failed to create product");
 
-        return CreatedAtAction(nameof(GetProduct), new { product.Id }, newProduct);
+        return CreatedAtAction(nameof(GetProduct), new { product.Id }, productDto);
     }
 }

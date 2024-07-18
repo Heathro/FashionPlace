@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CatalogService.Data;
+using CatalogService.Interfaces;
 
 namespace CatalogService.Controllers;
 
@@ -8,17 +7,17 @@ namespace CatalogService.Controllers;
 [Route("api/catalog/brands")]
 public class BrandsController : ControllerBase
 {
-    private readonly CatalogDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public BrandsController(CatalogDbContext context)
+    public BrandsController(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<string>>> GetBrands()
     {
-        var brands = await _context.Brands.Select(b => b.Name).ToListAsync();
+        var brands = await _unitOfWork.Brands.GetBrandNamesAsync();
         return Ok(brands);
     }
 }

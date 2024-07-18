@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CatalogService.Data;
 using CatalogService.DTOs;
 using CatalogService.Entities;
+using CatalogService.Interfaces;
 
 namespace CatalogService.Controllers;
 
@@ -10,17 +9,17 @@ namespace CatalogService.Controllers;
 [Route("api/catalog/categories")]
 public class CategoriesController : ControllerBase
 {
-    private readonly CatalogDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CategoriesController(CatalogDbContext context)
+    public CategoriesController(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<CategoryDto>>> GetCategories()
     {
-        var categories = await _context.Categories.ToListAsync();
+        var categories = await _unitOfWork.Categories.GetCategoriesAsync();
         var categoryDtos = BuildCategoryHierarchy(null, categories);
         return Ok(categoryDtos);
     }

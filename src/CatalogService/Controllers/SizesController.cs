@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using CatalogService.Data;
+using CatalogService.Interfaces;
 
 namespace CatalogService.Controllers;
 
@@ -8,17 +7,17 @@ namespace CatalogService.Controllers;
 [Route("api/catalog/sizes")]
 public class SizesController : ControllerBase
 {
-    private readonly CatalogDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public SizesController(CatalogDbContext context)
+    public SizesController(IUnitOfWork unitOfWork)
     {
-        _context = context;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<string>>> GetSizes()
     {
-        var sizes = await _context.Sizes.Select(s => s.Name).ToListAsync();
+        var sizes = await _unitOfWork.Sizes.GetSizeNamesAsync();
         return Ok(sizes);
     }
 }
