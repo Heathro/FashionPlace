@@ -8,5 +8,4 @@ public interface IProductsRepository
     Task<List<ProductDto>> GetProductsAsync();
     Task<ProductDto> GetProductAsync(Guid id);
     public void AddProduct(Product product);
-    Task<bool> SaveChangesAsync();
 }

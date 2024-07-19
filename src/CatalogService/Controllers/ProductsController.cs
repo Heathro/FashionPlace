@@ -29,8 +29,7 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ProductDto>>> GetProducts()
     {
-        var products = await _unitOfWork.Products.GetProductsAsync();
-        return Ok(products);
+        return await _unitOfWork.Products.GetProductsAsync();
     }
 
     [HttpGet("{id}")]
@@ -38,7 +37,7 @@ public class ProductsController : ControllerBase
     {
         var product = await _unitOfWork.Products.GetProductAsync(id);
         if (product == null) return NotFound();
-        return Ok(product);
+        return product;
     }
 
     [Authorize]
