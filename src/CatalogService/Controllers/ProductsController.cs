@@ -60,11 +60,14 @@ public class ProductsController : ControllerBase
                 parent = await _unitOfWork.Categories.GetCategoryAsync(category.ParentCategoryId);
             }
             Category current = null;
-            foreach (var newCategory in category.NewCategories)
+            if (category.NewCategories != null)
             {
-                current = new Category { Name = newCategory, ParentCategory = parent };
-                parent = current;
-            }
+                foreach (var newCategory in category.NewCategories)
+                {
+                    current = new Category { Name = newCategory, ParentCategory = parent };
+                    parent = current;
+                }
+            }            
             productCategories.Add(new ProductCategory { Category = current ?? parent });
         }
 
@@ -99,14 +102,17 @@ public class ProductsController : ControllerBase
         }
 
         var specifications = new List<Specification>();
-        foreach (var specification in createProductDto.Specifications)
+        if (createProductDto.Specifications != null)
         {
-            var type = await _unitOfWork.SpecificationTypes.GetSpecificationTypeAsync(specification.Type);
-            specifications.Add(new Specification
+            foreach (var specification in createProductDto.Specifications)
             {
-                SpecificationType = type ?? new SpecificationType { Type = specification.Type },
-                Value = specification.Value
-            });
+                var type = await _unitOfWork.SpecificationTypes.GetSpecificationTypeAsync(specification.Type);
+                specifications.Add(new Specification
+                {
+                    SpecificationType = type ?? new SpecificationType { Type = specification.Type },
+                    Value = specification.Value
+                });
+            }
         }
 
         var product = new Product()
