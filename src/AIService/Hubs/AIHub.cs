@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using AIService.Data;
 using AIService.Entities;
-using AutoMapper;
 using AIService.DTOs;
 using AIService.Services;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Runtime.CompilerServices;
+using MongoDB.Entities;
+using System.Text.Json;
+using MongoDB.Driver;
 
 namespace AIService.Hubs;
 
@@ -15,6 +16,7 @@ public class AIHub : Hub
     private readonly AIDbContext _context;
     private readonly IMapper _mapper;
     private readonly ModelService _modelService;
+    private static string _products;
 
     public AIHub(AIDbContext context, IMapper mapper, ModelService modelService)
     {
@@ -25,6 +27,9 @@ public class AIHub : Hub
 
     public override async Task OnConnectedAsync()
     {
+        var result = await DB.Find<Product>().ExecuteAsync();
+        _products = JsonSerializer.Serialize(result);
+
         var messageThread = new MessageThread()
         {
             ConnectionId = Context.ConnectionId,
@@ -41,7 +46,8 @@ public class AIHub : Hub
 
         await _context.SaveChangesAsync();
 
-        await Clients.Caller.SendAsync(
+        await Clients.Caller.SendAsync
+        (
             "ReceiveMessageThread",
             _mapper.Map<MessageThreadDto>(messageThread)
         );
@@ -71,7 +77,7 @@ public class AIHub : Hub
         var aiMessage = new Message
         {
             IsUser = false,
-            Content = await _modelService.GetAIReplyAsync(messageThreadDto) 
+            Content = await _modelService.GetAIReplyAsync(messageThreadDto, _products) 
         };
         messageThread.Messages.Add(aiMessage);
         await _context.SaveChangesAsync();

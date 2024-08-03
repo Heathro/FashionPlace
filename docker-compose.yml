@@ -105,12 +105,16 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - ASPNETCORE_URLS=http://+:80
+            - RabbitMq__Host=rabbitmq
             - ConnectionStrings__PostgresDb=Server=postgres:5432;User Id=postgres;Password=postgres;Database=ai
+            - ConnectionStrings__MongoDb=mongodb://mongo:mongo@mongo
             - OllamaUrl=http://ollama:11434
         ports:
             - 7004:80
         depends_on:
             - postgres
+            - mongo
+            - rabbitmq
     ollama:
         image: ollama/ollama
         container_name: ollama

@@ -15,9 +15,16 @@ public class ModelService
         _mapper = mapper;
     }
 
-    public async Task<string> GetAIReplyAsync(MessageThreadDto messageThreadDto)
+    public async Task<string> GetAIReplyAsync(MessageThreadDto messageThreadDto, string products = "")
     {
         var modelChatRequest = _mapper.Map<ModelChatRequest>(messageThreadDto);
+
+        modelChatRequest.messages.Insert(0, new ModelChatMessage
+        {
+            role = "user",
+            content = "Products in stock: " + products
+        });
+
         var response = await _modelHttpClient.GetAIResponseAsync(modelChatRequest);
         return response.message.content;
     }

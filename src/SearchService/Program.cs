@@ -36,6 +36,6 @@ var app = builder.Build();
 app.UseAuthorization();
 app.MapControllers();
 
-await DbInitializer.InitDb(app);
+await DbInitializer.InitDbAsync(app);
 
 app.Run();

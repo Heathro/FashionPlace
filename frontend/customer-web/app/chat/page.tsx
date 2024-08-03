@@ -50,8 +50,18 @@ export default function Chat() {
     }
   }, [connection])
 
+  const linkify = (text: string) => {
+    const guidPattern = /\b[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}\b/g;  
+    return text.replace(guidPattern, (guid) => 
+      `<a href="/products/details/${guid}" 
+        target="_blank" rel="noopener noreferrer" 
+        style="color: blue; text-decoration: underline;"
+      >Link</a>`
+    );
+  };
+
   return (
-    <div className='w-1/3 mx-auto'>
+    <div className='w-1/2 mx-auto'>
       {messageThread && (
         <>
           <div>
@@ -62,9 +72,8 @@ export default function Chat() {
                   p-2 m-2 rounded
                   ${message.isUser ? 'bg-green-100 text-right' : 'bg-red-100 text-left'}
                 `}
-              >
-                {message.content}
-              </div>
+                dangerouslySetInnerHTML={{ __html: linkify(message.content) }}
+              />
             ))}
           </div>
           
@@ -82,6 +91,6 @@ export default function Chat() {
           </form>
         </>
       )}
-  </div>
+    </div>
   )
 }

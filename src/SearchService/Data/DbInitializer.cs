@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using MongoDB.Entities;
 using SearchService.Entities;
 
@@ -7,12 +6,15 @@ namespace SearchService.Data;
 
 public class DbInitializer
 {
-    public static async Task InitDb(WebApplication app)
+    public static async Task InitDbAsync(WebApplication app)
     {
         await DB.InitAsync
         (
             "Search",
-            MongoClientSettings.FromConnectionString(app.Configuration.GetConnectionString("MongoDb"))
+            MongoClientSettings.FromConnectionString
+            (
+                app.Configuration.GetConnectionString("MongoDb")
+            )
         );
 
         await DB.Index<Product>()
