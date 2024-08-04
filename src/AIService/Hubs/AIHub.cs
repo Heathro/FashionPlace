@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Entities;
+using MongoDB.Driver;
 using AutoMapper;
 using AIService.Data;
 using AIService.Entities;
 using AIService.DTOs;
 using AIService.Services;
-using MongoDB.Entities;
-using System.Text.Json;
-using MongoDB.Driver;
 
 namespace AIService.Hubs;
 
@@ -55,6 +55,16 @@ public class AIHub : Hub
 
     public override Task OnDisconnectedAsync(Exception exception)
     {
+        var messageThread = _context.MessageThreads
+            .Include(mt => mt.Messages)
+            .FirstOrDefault(mt => mt.ConnectionId == Context.ConnectionId);
+
+        if (messageThread != null)
+        {
+            _context.MessageThreads.Remove(messageThread);
+            _context.SaveChanges();
+        }
+
         return base.OnDisconnectedAsync(exception);
     }
 
