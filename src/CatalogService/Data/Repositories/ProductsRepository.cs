@@ -17,11 +17,12 @@ public class ProductsRepository : IProductsRepository
         _mapper = mapper;
     }
 
-    public async Task<List<ProductDto>> GetProductsAsync()
+    public async Task<List<ProductDto>> GetProductDtosAsync()
     {
         var products = await _context.Products
             .Include(p => p.Model)
                 .ThenInclude(m => m.Brand)
+                    .ThenInclude(b => b.Models)
             .Include(p => p.ProductCategories)
                 .ThenInclude(pc => pc.Category)
                     .ThenInclude(c => c.ParentCategory)
@@ -39,11 +40,12 @@ public class ProductsRepository : IProductsRepository
         return _mapper.Map<List<ProductDto>>(products);
     }
 
-    public async Task<ProductDto> GetProductAsync(Guid id)
+    public async Task<ProductDto> GetProductDtoAsync(Guid id)
     {
         var product = await _context.Products
             .Include(p => p.Model)
                 .ThenInclude(m => m.Brand)
+                    .ThenInclude(b => b.Models)
             .Include(p => p.ProductCategories)
                 .ThenInclude(pc => pc.Category)
                     .ThenInclude(c => c.ParentCategory)
@@ -61,8 +63,34 @@ public class ProductsRepository : IProductsRepository
         return _mapper.Map<ProductDto>(product);
     }
 
+    public async Task<Product> GetProductAsync(Guid id)
+    {
+        return await _context.Products
+            .Include(p => p.Model)
+                .ThenInclude(m => m.Brand)
+                    .ThenInclude(b => b.Models)
+            .Include(p => p.ProductCategories)
+                .ThenInclude(pc => pc.Category)
+                    .ThenInclude(c => c.ParentCategory)
+                        .ThenInclude(c => c.ParentCategory)
+                            .ThenInclude(c => c.ParentCategory)
+                                .ThenInclude(c => c.ParentCategory)
+            .Include(p => p.Variants)
+                .ThenInclude(v => v.Color)
+            .Include(p => p.Variants)
+                .ThenInclude(v => v.Size)
+            .Include(p => p.Specifications)
+                .ThenInclude(s => s.SpecificationType)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
+
     public void AddProduct(Product product)
     {
         _context.Products.Add(product);
+    }
+
+    public void UpdateProduct(Product product)
+    {
+        _context.Entry(product).State = EntityState.Modified;
     }
 }

@@ -20,6 +20,13 @@ public class BrandsRepository : IBrandsRepository
 
     public async Task<Brand> GetBrandAsync(string name)
     {
-        return await _context.Brands.FirstOrDefaultAsync(b => b.Name == name);
+        return await _context.Brands
+            .Include(b => b.Models)
+            .FirstOrDefaultAsync(b => b.Name == name);
+    }
+
+    public void RemoveBrand(Brand brand)
+    {
+        _context.Brands.Remove(brand);
     }
 }

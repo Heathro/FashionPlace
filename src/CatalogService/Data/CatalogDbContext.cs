@@ -31,7 +31,7 @@ public class CatalogDbContext : DbContext
             .HasOne(p => p.Model)
             .WithOne(m => m.Product)
             .HasForeignKey<Product>(p => p.ModelId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<Model>()
             .HasOne(m => m.Brand)
             .WithMany(b => b.Models)

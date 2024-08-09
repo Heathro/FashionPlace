@@ -5,7 +5,9 @@ namespace CatalogService.Interfaces;
 
 public interface IProductsRepository
 {
-    Task<List<ProductDto>> GetProductsAsync();
-    Task<ProductDto> GetProductAsync(Guid id);
-    public void AddProduct(Product product);
+    Task<List<ProductDto>> GetProductDtosAsync();
+    Task<ProductDto> GetProductDtoAsync(Guid id);
+    Task<Product> GetProductAsync(Guid id);
+    void AddProduct(Product product);
+    void UpdateProduct(Product product);
 }

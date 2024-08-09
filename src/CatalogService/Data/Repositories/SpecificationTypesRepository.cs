@@ -20,6 +20,8 @@ public class SpecificationTypesRepository : ISpecificationTypesRepository
 
     public async Task<SpecificationType> GetSpecificationTypeAsync(string type)
     {
-        return await _context.SpecificationTypes.FirstOrDefaultAsync(s => s.Type == type);
+        return await _context.SpecificationTypes
+            .Include(s => s.Specifications)
+            .FirstOrDefaultAsync(s => s.Type == type);
     }
 }

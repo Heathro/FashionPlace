@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using MassTransit;
 using AutoMapper;
 using Contracts;
-using CatalogService.Data;
 using CatalogService.DTOs;
 using CatalogService.Entities;
 using CatalogService.Interfaces;
@@ -29,13 +27,13 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ProductDto>>> GetProducts()
     {
-        return await _unitOfWork.Products.GetProductsAsync();
+        return await _unitOfWork.Products.GetProductDtosAsync();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetProduct(Guid id)
     {
-        var product = await _unitOfWork.Products.GetProductAsync(id);
+        var product = await _unitOfWork.Products.GetProductDtoAsync(id);
         if (product == null) return NotFound();
         return product;
     }
@@ -135,5 +133,40 @@ public class ProductsController : ControllerBase
         if (!result) return BadRequest("Failed to create product");
 
         return CreatedAtAction(nameof(GetProduct), new { product.Id }, productDto);
+    }
+
+    [Authorize]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateProduct(Guid id, UpdateProductDto updateProductDto)
+    {
+        var product = await _unitOfWork.Products.GetProductAsync(id);
+        if (product == null) return NotFound();
+
+        product.Description = updateProductDto.Description;
+
+        var currentBrand = product.Model.Brand;
+        if (currentBrand.Name != updateProductDto.Brand)
+        {
+            currentBrand.Models.Remove(product.Model);
+            if (currentBrand.Models.Count == 0) _unitOfWork.Brands.RemoveBrand(currentBrand);
+
+            var brand = await _unitOfWork.Brands.GetBrandAsync(updateProductDto.Brand);
+            product.Model = new Model
+            {
+                Name = updateProductDto.Model,
+                Brand = brand ?? new Brand { Name = updateProductDto.Brand }
+            };
+        }
+        else if (product.Model.Name != updateProductDto.Model)
+        {
+            product.Model.Name = updateProductDto.Model;
+        }
+
+        _unitOfWork.Products.UpdateProduct(product);
+
+        var result = await _unitOfWork.SaveChangesAsync();
+        if (!result) return BadRequest("Failed to update product");
+
+        return Ok();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CatalogService.DTOs;
+using CatalogService.Interfaces;
 
 namespace CatalogService.Helpers;
 
@@ -7,11 +7,11 @@ public class NewCategoriesValidationAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        var categoryDto = (CreateCategoryDto)validationContext.ObjectInstance;
+        var newCategoryDto = (INewCategoryDto)validationContext.ObjectInstance;
 
-        if (categoryDto.ParentCategoryId == null)
+        if (newCategoryDto.ParentCategoryId == null)
         {  
-            if (categoryDto.NewCategories == null || categoryDto.NewCategories.Count == 0)
+            if (newCategoryDto.NewCategories == null || newCategoryDto.NewCategories.Count == 0)
             {
                 return new ValidationResult
                 (
