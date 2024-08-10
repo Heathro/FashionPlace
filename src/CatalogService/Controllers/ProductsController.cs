@@ -162,6 +162,35 @@ public class ProductsController : ControllerBase
             product.Model.Name = updateProductDto.Model;
         }
 
+        var categoriesToRemain = updateProductDto.Categories
+            .Where(c => c.ParentCategoryId == c.Id && c.NewCategories.Count == 0)
+            .Select(c => c.Id)
+            .ToList();
+        product.ProductCategories = product.ProductCategories
+            .Where(pc => categoriesToRemain.Contains(pc.CategoryId))
+            .ToList();
+        updateProductDto.Categories = updateProductDto.Categories
+            .Where(c => !categoriesToRemain.Contains(c.Id))
+            .ToList();
+        foreach (var category in updateProductDto.Categories)
+        {
+            Category parent = null;
+            if (category.ParentCategoryId != null)
+            {
+                parent = await _unitOfWork.Categories.GetCategoryAsync(category.ParentCategoryId);
+            }
+            Category current = null;
+            if (category.NewCategories != null)
+            {
+                foreach (var newCategory in category.NewCategories)
+                {
+                    current = new Category { Name = newCategory, ParentCategory = parent };
+                    parent = current;
+                }
+            }            
+            product.ProductCategories.Add(new ProductCategory { Category = current ?? parent });
+        }
+
         _unitOfWork.Products.UpdateProduct(product);
 
         var result = await _unitOfWork.SaveChangesAsync();
